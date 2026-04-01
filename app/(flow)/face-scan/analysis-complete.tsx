@@ -155,7 +155,7 @@ const AiAnalysisCompleteScreen = () => {
 
                 <View className='mt-3'>
                     <Text className='font-outfitMedium text-[16px] text-[#2E2117] text-start  '>Detected Conditions</Text>
-                    <BorderlessShadowCard onPress={() => { }} b_bl={0} b_br={0} b_tl={0} b_tr={0} style={{ paddingVertical: 16, paddingHorizontal: 24, marginTop: 6 }} >
+                    <BorderlessShadowCard b_bl={0} b_br={0} b_tl={0} b_tr={0} style={{ paddingVertical: 16, paddingHorizontal: 24, marginTop: 6 }} >
                         <View className='flex-row items-start gap-3'>
                             <IInCircleIcon size={24} color='#7A5D3E' />
                             <View className='flex-1'>
@@ -174,7 +174,7 @@ const AiAnalysisCompleteScreen = () => {
                         </View>
                     </BorderlessShadowCard>
 
-                    <BorderlessShadowCard onPress={() => { }} b_bl={0} b_br={0} b_tl={0} b_tr={0} style={{ paddingVertical: 16, paddingHorizontal: 24, marginTop: 12 }} >
+                    <BorderlessShadowCard b_bl={0} b_br={0} b_tl={0} b_tr={0} style={{ paddingVertical: 16, paddingHorizontal: 24, marginTop: 12 }} >
                         <View className='flex-row items-start gap-3'>
                             <SignInCuttedCircleIcon size={24} color='#7A8B6A' />
                             <View className='flex-1'>
