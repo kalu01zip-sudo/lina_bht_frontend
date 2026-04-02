@@ -7,7 +7,7 @@ import { CameraIcon } from '@/components/icons';
 
 export default function FaceLoadingScreen() {
     const { imageUri, scanType } = useLocalSearchParams();
-    
+
     const outerRingAnim = useRef(new Animated.Value(0)).current;
     const middleRingAnim = useRef(new Animated.Value(0)).current;
     const innerRingAnim = useRef(new Animated.Value(0)).current;
@@ -19,7 +19,7 @@ export default function FaceLoadingScreen() {
         const timer = setTimeout(() => {
             router.replace({
                 pathname: '/(flow)/face-scan/analysis-complete',
-                params: { 
+                params: {
                     imageUri: imageUri || '',
                     scanType: scanType || ''
                 }
@@ -131,12 +131,12 @@ export default function FaceLoadingScreen() {
                 </View>
 
                 <View className="mt-8 items-center">
-                    <Text 
+                    <Text
                         className="text-[24px] font-outfitMedium"
                         style={{ color: '#2E2117' }}>
                         AI Analyzing Face
                     </Text>
-                    <Text 
+                    <Text
                         className="font-outfit text-[14px] text-center px-8 mt-2"
                         style={{ color: '#2E2117CC' }}>
                         Detecting hydration levels, pores, and redness...

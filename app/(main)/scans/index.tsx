@@ -8,9 +8,7 @@ import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { FaceScanIcon } from '@/components/icons';
 import { useRouter } from 'expo-router';
 
-
 const Scan = () => {
-
   const router = useRouter();
   // const handleScanPress = (scanType: string) => {
   //   router.push({
@@ -35,7 +33,7 @@ const Scan = () => {
 
     router.push({
       pathname: path,
-      params: { scanType: scanType }
+      params: { scanType: scanType },
     });
   };
 
@@ -54,7 +52,6 @@ const Scan = () => {
           paddingTop: 47,
         }}
         className="flex-1 px-container">
-
         {/* Face Scan */}
         <BorderlessShadowCard onPress={() => handleScanPress('Face Scan')}>
           <View className="flex-row items-center justify-between gap-3 px-3">

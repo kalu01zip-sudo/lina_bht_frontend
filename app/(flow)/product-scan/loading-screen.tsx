@@ -18,7 +18,8 @@ export default function ProductLoadingScreen() {
 
         const timer = setTimeout(() => {
             router.replace({
-                pathname: '/(flow)/product-scan/analysis-complete',
+                // pathname: '/(flow)/product-scan/analysis-complete',
+                pathname: '/(flow)/product-scan/analysis-compatibility-check',
                 params: {
                     imageUri: imageUri || '',
                     scanType: scanType || ''

@@ -1,5 +1,3 @@
-
-
 // // app/(main)/scan/camera-scan.tsx (Fully safe version)
 // import React, { useState, useRef } from 'react';
 // import { View, TouchableOpacity, StyleSheet, Alert, Text, Dimensions, Platform } from 'react-native';
@@ -215,7 +213,7 @@
 //                     </View>
 
 //                     {/* Instruction Text */}
-//                     <View 
+//                     <View
 //                         style={{
 //                             position: 'absolute',
 //                             bottom: 120 + insets.bottom,
@@ -233,7 +231,7 @@
 //                 </View>
 
 //                 {/* Capture Button - Dynamically positioned with safe area */}
-//                 <View 
+//                 <View
 //                     style={{
 //                         position: 'absolute',
 //                         bottom: Math.max(insets.bottom + 20, 30),
@@ -256,8 +254,6 @@
 //     );
 // }
 
-
-
 // // app/(main)/scan/camera-scan.tsx (Fixed animation)
 // import React, { useState, useRef, useEffect } from 'react';
 // import { View, TouchableOpacity, StyleSheet, Alert, Text, Dimensions, Animated, Easing } from 'react-native';
@@ -279,7 +275,7 @@
 //     const [isTakingPicture, setIsTakingPicture] = useState(false);
 //     const cameraRef = useRef<any>(null);
 //     const insets = useSafeAreaInsets();
-    
+
 //     // Animation values
 //     const scanLineAnim = useRef(new Animated.Value(0)).current;
 //     const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -368,7 +364,7 @@
 //     const guideHeight = height * 0.45; // Taller frame for face
 //     const cornerSize = 40;
 //     const lineWidth = 4;
-    
+
 //     // Calculate translateY for scan line (from 0 to guideHeight)
 //     const translateY = scanLineAnim.interpolate({
 //         inputRange: [0, 1],
@@ -416,7 +412,7 @@
 //                             position: 'relative',
 //                             transform: [{ scale: pulseAnim }],
 //                         }}>
-                        
+
 //                         {/* Corner Brackets - Top Left */}
 //                         <View
 //                             style={{
@@ -570,7 +566,7 @@
 //                     </Animated.View>
 
 //                     {/* Instruction Text */}
-//                     <View 
+//                     <View
 //                         style={{
 //                             position: 'absolute',
 //                             bottom: 120 + insets.bottom,
@@ -588,7 +584,7 @@
 //                 </View>
 
 //                 {/* Capture Button */}
-//                 <View 
+//                 <View
 //                     style={{
 //                         position: 'absolute',
 //                         bottom: Math.max(insets.bottom + 20, 30),
@@ -610,4 +606,3 @@
 //         </View>
 //     );
 // }
-

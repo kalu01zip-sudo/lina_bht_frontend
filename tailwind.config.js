@@ -21,7 +21,7 @@ module.exports = {
       },
       fontFamily: {
         didot: ['GFSDidot-Regular'], // 400 Reular
-        
+
         outfit: ['Outfit-Regular'], // 400 Reular
         outfitMedium: ['Outfit-Medium'], // 500 Medium
         outfitSemi: ['Outfit-SemiBold'], // 600 SemiBold
@@ -41,7 +41,7 @@ module.exports = {
 
         primous: ['Primous-Regular'], // 400 regula
         primousItalic: ['Primous-Italic'], // 400 regular italic
-        
+
 
       },
       fontSize: {
@@ -53,11 +53,11 @@ module.exports = {
         text26: '26px', // used in onboarding card title instead
 
         authTitle36: '36px',
-        
 
 
 
-        
+
+
       },
 
     },

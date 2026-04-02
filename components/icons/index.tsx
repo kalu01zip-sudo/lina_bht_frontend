@@ -1,3 +1,5 @@
+import { CrossInCircleIcon } from './CrossInCircleIcon';
+
 export { ArrowRightIcon } from './ArrowRightIcon';
 export { EyeOpenIcon } from './EyeOpenIcon';
 export { EyeCloseIcon } from './EyeCloseIcon';
@@ -51,3 +53,12 @@ export { CameraIcon } from './CameraIcon';
 
 export { IInCircleIcon } from './IInCircleIcon';
 export { SignInCuttedCircleIcon } from './SignInCuttedCircleIcon';
+
+export { ArrowCircleDuetIcon } from './PlusIcon';
+export { PlusIcon } from './ArrowCircleDuetIcon';
+
+export { CrossInCircleIcon } from './CrossInCircleIcon';
+export { DangerIcon } from './DangerIcon';
+export { FlameIcon } from './FlameIcon';
+
+export { MoonIcon } from './MoonIcon';
