@@ -11,8 +11,11 @@ import { DangerIcon, FlameIcon } from '@/components/icons';
 import IconBadge from '@/components/icons/modified/IconBadge';
 import { CrossInCircleIcon } from '@/components/icons/CrossInCircleIcon';
 import PrimaryVariantButton from '@/components/buttons/PrimaryVariantButton';
+import { useRouter } from 'expo-router';
 
 const AnalysisCompatibilityCheckScreen = () => {
+  const router = useRouter();
+
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
       <CustomHeader title="Compatibility Check" height={50} backButton />
@@ -148,10 +151,17 @@ const AnalysisCompatibilityCheckScreen = () => {
             <PrimaryVariantButton
               title="Ask AI Assistant"
               leftIcon={<FlameIcon size={16} color="#361A0D" />}
-              onPress={() => {}}
+              onPress={() => {
+                router.push('/(flow)/ai-assistant');
+              }}
               style={{ marginTop: 32, marginBottom: 4 }}
             />
-            <TouchableOpacity onPress={() => {}} activeOpacity={0.6} className="mt-4 py-5">
+            <TouchableOpacity
+              onPress={() => {
+                router.push('/(main)/routines');
+              }}
+              activeOpacity={0.6}
+              className="mt-4 py-5">
               <Text className="text-center font-outfitMedium text-[20px] text-[#361A0D]  ">
                 Skip this product
               </Text>

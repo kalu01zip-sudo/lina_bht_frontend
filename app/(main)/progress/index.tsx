@@ -15,6 +15,8 @@
 // import CustomHeader from '@/components/header/CustomHeader';
 // import { LAYOUT } from '@/constants/constants';
 // import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
+// import IconBadge from '@/components/icons/modified/IconBadge';
+// import { CurvedArrowTopRightIcon } from '@/components/icons';
 
 // const { width } = Dimensions.get('window');
 
@@ -31,6 +33,7 @@
 //   before: string;
 //   after: string;
 //   date: string;
+//   message: string;
 // }
 
 // const ProgressScreen = () => {
@@ -51,25 +54,28 @@
 //     { week: 'W8', score: 82, date: 'Feb 19' },
 //   ];
 
-//   // Sample before/after data with actual image URLs
+//   // Sample before/after data with actual image URLs and messages
 //   const beforeAfterData: BeforeAfterItem[] = [
 //     {
 //       id: '1',
 //       before: 'https://randomuser.me/api/portraits/women/68.jpg',
 //       after: 'https://randomuser.me/api/portraits/women/44.jpg',
 //       date: 'Week 1 → Week 8',
+//       message: 'Noticeable reduction in redness and improved hydration.',
 //     },
 //     {
 //       id: '2',
 //       before: 'https://randomuser.me/api/portraits/women/32.jpg',
 //       after: 'https://randomuser.me/api/portraits/women/55.jpg',
 //       date: 'Week 2 → Week 6',
+//       message: 'Significant improvement in skin texture and glow.',
 //     },
 //     {
 //       id: '3',
 //       before: 'https://randomuser.me/api/portraits/women/91.jpg',
 //       after: 'https://randomuser.me/api/portraits/women/79.jpg',
 //       date: 'Week 3 → Week 7',
+//       message: 'Reduced pore size and better skin barrier function.',
 //     },
 //   ];
 
@@ -115,12 +121,12 @@
 //         showsVerticalScrollIndicator={false}
 //         contentContainerStyle={{
 //           paddingBottom: LAYOUT.screen.scrollViewPaddingBottom,
-//           paddingTop: 10,
+//           paddingTop: 20,
 //           flexGrow: 1,
 //         }}
 //         className="flex-1">
 //         <View className="px-container">
-//           {/* Stats Summary Card */}
+//           {/* Tabs Container */}
 //           <BorderlessShadowCard
 //             b_tl={24}
 //             b_tr={24}
@@ -176,9 +182,20 @@
 //                 </BorderlessShadowCard>
 //               </TouchableOpacity>
 //             </View>
+//           </BorderlessShadowCard>
 
-//             {/* Stats Row */}
-//             <View className="mt-4 flex-row justify-between">
+//           {/* Stats Row - Separate Card with 0 border radius and margin top 16 */}
+//           {/* <BorderlessShadowCard
+//             b_tl={0}
+//             b_tr={0}
+//             b_bl={0}
+//             b_br={0}
+//             style={{
+//               marginTop: 16,
+//               paddingVertical: 20,
+//               paddingHorizontal: 24,
+//             }}>
+//             <View className="flex-row justify-between">
 //               <View className="items-center">
 //                 <Text className="font-outfit text-[12px]" style={{ color: '#2E211799' }}>
 //                   Average Score
@@ -206,7 +223,7 @@
 //                 </Text>
 //               </View>
 //             </View>
-//           </BorderlessShadowCard>
+//           </BorderlessShadowCard> */}
 
 //           {/* Analytics Tab Content */}
 //           {activeTab === 'analytics' && (
@@ -222,6 +239,24 @@
 //               }}>
 //               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 //                 <View>
+//                   <View className="mb-6 flex-row items-center justify-between bg-red-400">
+//                     {/* Left side: Text Content */}
+//                     <View className="flex-1 pr-4">
+//                       <Text className="font-outfitMedium text-[14px]" style={{ color: '#2E2117' }}>
+//                         Overall Skin Score
+//                       </Text>
+//                       <Text className="text-[12px] opacity-60">+13% this month</Text>
+//                     </View>
+
+//                     {/* Right side: Badge */}
+//                     <View>
+//                       <IconBadge
+//                         style={{ backgroundColor: '#7A8B6A1A' }}
+//                         size={40}
+//                         icon={<CurvedArrowTopRightIcon size={20} color="#7A8B6A" />}
+//                       />
+//                     </View>
+//                   </View>
 //                   <LineChart
 //                     data={chartData}
 //                     height={250}
@@ -240,8 +275,16 @@
 //                     xAxisIndicesColor="#2E211733"
 //                     xAxisColor="#2E211733"
 //                     yAxisColor="#2E211733"
-//                     yAxisTextStyle={{ color: '#2E211799', fontSize: 10 }}
-//                     xAxisLabelTextStyle={{ color: '#2E211799', fontSize: 10 }}
+//                     yAxisTextStyle={{
+//                       color: '#9C7C5C',
+//                       fontSize: 12,
+//                       fontFamily: 'Outfit-Regular',
+//                     }}
+//                     xAxisLabelTextStyle={{
+//                       color: '#9C7C5C',
+//                       fontSize: 12,
+//                       fontFamily: 'Outfit-Regular',
+//                     }}
 //                     yAxisSide="left"
 //                     yAxisIndices={[0, 20, 40, 60, 80, 100]}
 //                     yAxisIndicesHeight={6}
@@ -269,8 +312,6 @@
 //                         <View
 //                           style={{
 //                             backgroundColor: '#7A8B6A',
-//                             // paddingHorizontal: 8,
-//                             // paddingVertical: 4,
 //                             borderRadius: 8,
 //                           }}>
 //                           <Text
@@ -296,23 +337,24 @@
 //             </BorderlessShadowCard>
 //           )}
 
-//           {/* Before & After Tab Content - Without outer container */}
+//           {/* Before & After Tab Content */}
 //           {activeTab === 'beforeAfter' && (
-//             <View className="mt-4">
+//             <View className="mt-0">
 //               {beforeAfterData.map((item, index) => {
 //                 const isFirst = index === 0;
 //                 const isLast = index === beforeAfterData.length - 1;
 
 //                 return (
-//                   <View key={item.id} className="mb-4">
+//                   <View key={item.id}>
 //                     <BorderlessShadowCard
-//                       b_tl={isFirst ? 24 : 0}
-//                       b_tr={isFirst ? 24 : 0}
+//                       b_tl={isFirst ? 0 : 0}
+//                       b_tr={isFirst ? 0 : 0}
 //                       b_bl={isLast ? 24 : 0}
 //                       b_br={isLast ? 24 : 0}
 //                       style={{
 //                         paddingVertical: 16,
 //                         paddingHorizontal: 16,
+//                         marginTop: 16,
 //                       }}>
 //                       <Text
 //                         className="mb-3 text-center font-outfitMedium text-[14px]"
@@ -371,7 +413,19 @@
 //                           </View>
 //                         </TouchableOpacity>
 //                       </View>
+
+//                       {/* Result Message */}
+//                       <View className="mt-4">
+//                         <Text
+//                           className="text-center font-outfit text-[12px] leading-5"
+//                           style={{ color: '#2E2117B2' }}>
+//                           {item.message}
+//                         </Text>
+//                       </View>
 //                     </BorderlessShadowCard>
+
+//                     {/* Add margin between cards except for the last one */}
+//                     {!isLast && <View className="h-4" />}
 //                   </View>
 //                 );
 //               })}
@@ -416,6 +470,8 @@ import ImageView from 'react-native-image-viewing';
 import CustomHeader from '@/components/header/CustomHeader';
 import { LAYOUT } from '@/constants/constants';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
+import IconBadge from '@/components/icons/modified/IconBadge';
+import { CurvedArrowTopRightIcon } from '@/components/icons';
 
 const { width } = Dimensions.get('window');
 
@@ -534,6 +590,7 @@ const ProgressScreen = () => {
             style={{
               paddingVertical: 20,
               paddingHorizontal: 24,
+              marginBottom: 16,
             }}>
             {/* Tabs inside the same container */}
             <View className="flex-row gap-4">
@@ -629,13 +686,33 @@ const ProgressScreen = () => {
             <BorderlessShadowCard
               b_tl={0}
               b_tr={0}
-              b_bl={0}
-              b_br={0}
+              b_bl={24}
+              b_br={24}
               style={{
-                marginTop: 16,
                 paddingVertical: 24,
                 paddingHorizontal: 24,
               }}>
+              {/* Header with Overall Skin Score */}
+              <View className="mb-6 flex-row items-center justify-between">
+                {/* Left side: Text Content */}
+                <View className="flex-1 pr-4">
+                  <Text className="font-outfitMedium text-[14px]" style={{ color: '#2E2117' }}>
+                    Overall Skin Score
+                  </Text>
+                  <Text className="font-outfit text-[12px]" style={{ color: '#2E211799' }}>
+                    +13% this month
+                  </Text>
+                </View>
+
+                {/* Right side: Badge */}
+                <IconBadge
+                  style={{ backgroundColor: '#7A8B6A1A' }}
+                  size={40}
+                  icon={<CurvedArrowTopRightIcon size={20} color="#7A8B6A" />}
+                />
+              </View>
+
+              {/* Chart */}
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View>
                   <LineChart
@@ -694,6 +771,8 @@ const ProgressScreen = () => {
                           style={{
                             backgroundColor: '#7A8B6A',
                             borderRadius: 8,
+                            paddingHorizontal: 8,
+                            paddingVertical: 4,
                           }}>
                           <Text
                             style={{ color: 'white', fontSize: 12, fontFamily: 'outfit-medium' }}>
@@ -735,7 +814,6 @@ const ProgressScreen = () => {
                       style={{
                         paddingVertical: 16,
                         paddingHorizontal: 16,
-                        marginTop: 16,
                       }}>
                       <Text
                         className="mb-3 text-center font-outfitMedium text-[14px]"

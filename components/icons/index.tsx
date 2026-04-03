@@ -80,3 +80,4 @@ export { ThreeCurvedIcon } from './ThreeCurvedIcon';
 
 export { ThreeStarsIcon } from './ThreeStarsIcon';
 export { SendButtonIcon } from './SendButton';
+export { CurvedArrowTopRightIcon } from './CurvedArrowTopRight';
