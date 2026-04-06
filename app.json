@@ -4,10 +4,7 @@
     "slug": "gixy",
     "version": "1.0.0",
     "scheme": "gixy",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -24,7 +21,13 @@
           "microphonePermission": false
         }
       ],
-      "@react-native-community/datetimepicker"
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to update your profile picture.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take a profile photo."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -38,13 +41,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to analyze your skin and hair health."
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to analyze your skin and hair health.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos to update your profile picture.",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to take a profile photo."
       }
     },
     "android": {
@@ -54,7 +57,9 @@
       },
       "package": "com.sheikhrussell123.gixy",
       "permissions": [
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "extra": {
