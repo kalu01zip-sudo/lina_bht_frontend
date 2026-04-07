@@ -47,7 +47,7 @@ const Profile = () => {
             size={40}
             icon={<GearIcon size={20} color="#361A0D" />}
             onPress={() => {
-              router.push('/(flow)/settings/');
+              router.push('/(flow)/settings');
             }}
           />
         }
@@ -231,7 +231,7 @@ const Profile = () => {
             {/* support */}
             <BorderlessShadowCard
               onPress={() => {
-                router.push('/(flow)/support/');
+                router.push('/(flow)/support');
               }}
               b_tl={24}
               b_tr={24}

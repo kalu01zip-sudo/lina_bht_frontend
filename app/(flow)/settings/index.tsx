@@ -9,6 +9,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { ArrowRightHalfIcon, LockIcon, ProfileIcon } from '@/components/icons';
 import { useToast } from '@/hooks/useToast';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const SettingsScreen = () => {
   const router = useRouter();
@@ -57,26 +58,23 @@ const SettingsScreen = () => {
           </BorderlessShadowCard>
 
           <BorderlessShadowCard
-            onPress={() => {
-              router.push('/(flow)/settings/change-password');
-            }}
+            onPress={() => router.push('/(flow)/settings/change-password')}
             b_tl={0}
             b_tr={0}
-            b_bl={24}
-            b_br={24}
+            b_bl={0}
+            b_br={0}
             style={{
               paddingVertical: 16,
               paddingHorizontal: 24,
+              marginTop: 8,
             }}>
             <View className="flex-row items-center">
               <View className="flex-1 flex-row items-center gap-3">
                 <LockIcon size={20} color="#361A0D" />
-
                 <Text className="font-outfit text-[14px]" style={{ color: '#361A0D' }}>
                   Change Password
                 </Text>
               </View>
-
               <ArrowRightHalfIcon size={16} color="#361A0D" />
             </View>
           </BorderlessShadowCard>

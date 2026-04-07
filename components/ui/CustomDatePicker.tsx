@@ -80,7 +80,7 @@ export const DateOfBirthPicker: React.FC<DateOfBirthPickerProps> = ({
       <Modal visible={showPicker} transparent animationType="slide" onRequestClose={handleCancel}>
         <View className="flex-1 justify-end bg-black/50">
           <View
-            className="rounded-t-3xl bg-white"
+            className="rounded-t-3xl bg-backgroundColor "
             style={{ height: Platform.OS === 'ios' ? 400 : 500 }}>
             {/* Header */}
             <View className="flex-row items-center justify-between border-b border-gray-200 p-4">

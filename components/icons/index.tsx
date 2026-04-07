@@ -84,3 +84,5 @@ export { CurvedArrowTopRightIcon } from './CurvedArrowTopRight';
 
 export { SupportIcon } from './SupportIcon';
 export { GearIcon } from './GearIcon';
+
+export { ArticleIcon } from './ArticleIcon';

@@ -7,7 +7,7 @@ import HomeHeader from '@/components/header/HomeHeader';
 import { useHomeScreen } from '@/components/home/hooks/useHomeScreen';
 import { SkinHealthCard } from '@/components/home/SkinHealthCard';
 import { QuickActionsRow } from '@/components/home/QuickActionsRow';
-import { InsightsSection } from '@/components/home/InsightsSection';
+// import { InsightsSection } from '@/components/home/InsightsSection';
 import { SkinProgressCard } from '@/components/home/SkinProgressCard';
 import { MorningRoutineCard } from '@/components/home/MorningRoutineCard';
 import { LAYOUT } from '@/constants/constants';
@@ -96,7 +96,7 @@ export default function HomeScreen() {
           onViewAll={handleViewAllRoutines}
         />
 
-        <InsightsSection insights={insights} onInsightPress={handleInsightPress} />
+        {/* <InsightsSection insights={insights} onInsightPress={handleInsightPress} /> */}
 
         <SkinProgressCard onPress={handleSkinProgress} />
       </ScrollView>
