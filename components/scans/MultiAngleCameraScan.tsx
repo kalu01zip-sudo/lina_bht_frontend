@@ -27,9 +27,9 @@ const WHITE_GLASS = 'rgba(255,255,255,0.15)';
 const WHITE_GLASS_BORDER = 'rgba(255,255,255,0.2)';
 
 // ─── Timing Constants (in milliseconds) ───────────────────────────────────────
-const PRE_COUNTDOWN_DELAY_MS = 2000; // How long to hold steady before countdown (2 seconds)
-const COUNTDOWN_DURATION = 5; // Countdown seconds (5 seconds)
-const CAPTURE_DELAY_MS = 3000; // Delay between angle captures (2 seconds)
+const PRE_COUNTDOWN_DELAY_MS = 1000; // How long to hold steady before countdown (2 seconds)
+const COUNTDOWN_DURATION = 4; // Countdown seconds (5 seconds)
+const CAPTURE_DELAY_MS = 1000; // Delay between angle captures (2 seconds)
 
 export interface AngleCapture {
   angle: 'front' | 'left' | 'right' | 'up' | 'down';
