@@ -158,11 +158,6 @@ export default function FaceLoadingScreen() {
   const innerRingAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  console.log('🔵 LOADING SCREEN - Received params:', {
-    hasSessionId: !!sessionId,
-    scanType,
-  });
-
   useEffect(() => {
     startLoadingAnimation();
 
@@ -172,11 +167,11 @@ export default function FaceLoadingScreen() {
           const captures = await getFaceScanCaptures(sessionId as string);
 
           if (captures) {
-            console.log('✅ Captures metadata loaded:', captures.length);
+            console.log('✅ Captures loaded:', captures.length);
 
             const formattedCaptures = captures.map((capture) => ({
               angle: capture.angle,
-              uri: capture.localPath,
+              uri: capture.uri,
               timestamp: capture.timestamp,
             }));
 
@@ -206,8 +201,6 @@ export default function FaceLoadingScreen() {
     };
 
     loadAndNavigate();
-
-    // No cleanup needed for animationTimer since it's not used
   }, [sessionId]);
 
   const startLoadingAnimation = () => {

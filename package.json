@@ -55,7 +55,6 @@
     "react-native-gifted-charts": "^1.4.76",
     "react-native-image-viewing": "^0.2.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-mmkv": "^4.3.1",
     "react-native-reanimated": "~4.1.1",
     "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "~5.6.0",
