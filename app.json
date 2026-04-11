@@ -46,8 +46,7 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to analyze your skin and hair health.",
-        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos to update your profile picture.",
-        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to take a profile photo."
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos to update your profile picture."
       }
     },
     "android": {

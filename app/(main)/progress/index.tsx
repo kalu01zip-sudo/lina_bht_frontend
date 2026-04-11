@@ -114,7 +114,7 @@ const ProgressScreen = () => {
           )}
 
           {activeTab === 'beforeAfter' && (
-            <View className="mt-0">
+            <View className="mt-3">
               {beforeAfterData.map((item, index) => (
                 <BeforeAfterCard
                   key={item.id}
