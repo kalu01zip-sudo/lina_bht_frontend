@@ -143,12 +143,12 @@
 
 //         <Toast config={toastConfig} />
 
-//         {/* {__DEV__ && (
+//         {__DEV__ && (
 //           <>
 //             <FloatingDevButton onPress={() => {}} />
 //             <DevMenu visible={false} onClose={() => {}} />
 //           </>
-//         )} */}
+//         )}
 //       </SafeAreaProvider>
 //     </GestureHandlerRootView>
 //   );
