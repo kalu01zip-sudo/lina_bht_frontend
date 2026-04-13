@@ -43,24 +43,24 @@ const Profile = () => {
   });
 
   // Load user data from AsyncStorage
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        // You can load user data from AsyncStorage or your auth context
-        const name = await AsyncStorage.getItem('user_name');
-        const email = await AsyncStorage.getItem('user_email');
-        const avatar = await AsyncStorage.getItem('user_avatar');
+  // useEffect(() => {
+  //   const loadUserData = async () => {
+  //     try {
+  //       // You can load user data from AsyncStorage or your auth context
+  //       const name = await AsyncStorage.getItem('user_name');
+  //       const email = await AsyncStorage.getItem('user_email');
+  //       const avatar = await AsyncStorage.getItem('user_avatar');
 
-        if (name) setUserName(name);
-        if (email) setUserEmail(email);
-        if (avatar) setUserAvatar(avatar);
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      }
-    };
+  //       if (name) setUserName(name);
+  //       if (email) setUserEmail(email);
+  //       if (avatar) setUserAvatar(avatar);
+  //     } catch (error) {
+  //       console.error('Error loading user data:', error);
+  //     }
+  //   };
 
-    loadUserData();
-  }, []);
+  //   loadUserData();
+  // }, []);
 
   const handleLogout = async () => {
     try {

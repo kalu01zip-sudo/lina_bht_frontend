@@ -16,22 +16,22 @@ export const GRADIENT_CONFIG = {
 export const ONBOARDING_DATA = [
   {
     id: '1',
-    title: 'Ai Powered Skin Care',
-    description: 'AI helps you build healthier screen habits every day.',
+    title: 'Your Skin deserves a routine that makes sense',
+    description: 'Learn what to apply, when, and why - with your own products.',
     backgroundImage: require('@/assets/images/onboarding/onboarding_1.png'),
     buttonText: 'Get Started',
   },
   {
     id: '2',
-    title: 'Get Your Personalized Routiner',
-    description: 'Smart reminders and brightness control reduce eye strain.',
+    title: 'Stop guessing. Start understanding your skin. ',
+    description: 'Scan your products. Get a routine built for your skin.',
     backgroundImage: require('@/assets/images/onboarding/onboarding_2.jpg'),
     buttonText: 'Next',
   },
   {
     id: '3',
-    title: 'Product That Match Your Budget',
-    description: 'See your screen time and get AI tips to stay balanced.',
+    title: 'Scan any product. We explain how to use it.',
+    description: 'No more layering mistakes. No more irritation.',
     backgroundImage: require('@/assets/images/onboarding/onboarding_3.jpg'),
     buttonText: 'Continue',
   },
