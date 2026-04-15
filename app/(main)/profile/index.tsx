@@ -62,6 +62,14 @@ const Profile = () => {
   //   loadUserData();
   // }, []);
 
+  // 1. MOCK DATA OBJECT (Simulates a Backend API Response)
+  const USER_PROFILE_DATA = [
+    { id: '1', label: 'Skin Type', value: 'Combination' },
+    { id: '2', label: 'Skin Concerns', value: 'Redness, Occasional Breakouts, Uneven Texture' },
+    { id: '3', label: 'Hair Type', value: 'Fine' },
+    { id: '4', label: 'Allergies', value: 'Fragrance, Sulfates' },
+  ];
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -161,8 +169,58 @@ const Profile = () => {
             </View>
           </BorderlessShadowCard>
 
-          {/* Premium Upgrade Card */}
           <BorderlessShadowCard
+            b_tl={0}
+            b_tr={0}
+            b_bl={24}
+            b_br={24}
+            style={{ padding: 24, marginTop: 12 }}>
+            <Text className="mb-5 font-outfitMedium text-[16px]" style={{ color: '#361A0D' }}>
+              Skin & Hair Profile
+            </Text>
+
+            {/* 2. DYNAMIC LOOP */}
+            {USER_PROFILE_DATA.map((item, index) => (
+              <View key={item.id}>
+                <View className="flex-row items-start justify-between">
+                  <Text className="font-outfitMedium text-[14px]" style={{ color: '#361A0D' }}>
+                    {item.label}:
+                  </Text>
+                  <Text
+                    className="ml-4 flex-1 font-outfit text-[12px]"
+                    style={{ color: '#2E2117', textAlign: 'right' }}>
+                    {item.value}
+                  </Text>
+                </View>
+
+                {/* Render divider only if it's NOT the last item */}
+                {index < USER_PROFILE_DATA.length - 1 && (
+                  <View className="my-2 h-[1px] w-full bg-[#dec8b3]" />
+                )}
+              </View>
+            ))}
+
+            {/* 3. PREMIUM SECTION */}
+            <View className="mt-8">
+              <Text className="font-outfitMedium text-[16px]" style={{ color: '#361A0D' }}>
+                Unlock Premium
+              </Text>
+              <Text className="mt-[6px] font-outfit text-[12px]" style={{ color: '#2A2118B2' }}>
+                Get advanced AI analysis, unlimited product scans, and priority support.
+              </Text>
+
+              <PrimaryButton
+                title="Upgrade"
+                height={48}
+                style={{ marginTop: 16 }}
+                textStyle={{ fontSize: 16 }}
+                onPress={() => router.push('/(flow)/profile/asking-upgrage-to-premium-screen')}
+              />
+            </View>
+          </BorderlessShadowCard>
+
+          {/* Premium Upgrade Card */}
+          {/* <BorderlessShadowCard
             b_tl={0}
             b_tr={0}
             b_bl={24}
@@ -187,13 +245,13 @@ const Profile = () => {
                 router.push('/(flow)/profile/asking-upgrage-to-premium-screen');
               }}
             />
-          </BorderlessShadowCard>
+          </BorderlessShadowCard> */}
 
           {/* Features Section */}
           <View className="mt-3">
             <View>
               <Text className="font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
-                Features
+                Feature
               </Text>
 
               {/* AI Assistant */}
@@ -203,8 +261,8 @@ const Profile = () => {
                 }}
                 b_tl={24}
                 b_tr={24}
-                b_bl={0}
-                b_br={0}
+                b_bl={24}
+                b_br={24}
                 style={{
                   paddingVertical: 16,
                   paddingHorizontal: 24,
@@ -228,7 +286,7 @@ const Profile = () => {
               </BorderlessShadowCard>
 
               {/* Wellness & Cycle */}
-              <BorderlessShadowCard
+              {/* <BorderlessShadowCard
                 onPress={() => {
                   router.push('/(flow)/wellness');
                 }}
@@ -250,7 +308,7 @@ const Profile = () => {
                   </View>
                   <ArrowRightHalfIcon size={16} color="#361A0D" />
                 </View>
-              </BorderlessShadowCard>
+              </BorderlessShadowCard> */}
             </View>
           </View>
 
@@ -264,10 +322,10 @@ const Profile = () => {
               onPress={() => {
                 router.push('/(flow)/profile/premium-plan-screen');
               }}
-              b_tl={0}
-              b_tr={0}
-              b_bl={0}
-              b_br={0}
+              b_tl={24}
+              b_tr={24}
+              b_bl={24}
+              b_br={24}
               style={{
                 paddingVertical: 16,
                 paddingHorizontal: 24,
