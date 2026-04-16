@@ -269,7 +269,8 @@ export default function SignUpScreen() {
       await AsyncStorage.setItem('hasSeenOnboarding', 'true');
 
       showSuccess('Account created successfully!');
-      router.replace('/(questionnaire)/life-phase');
+      // router.replace('/(questionnaire)/life-phase');
+      router.replace('/(questionnaire)/personal-info');
     } catch (error) {
       showError('Sign up failed. Please try again.');
     } finally {

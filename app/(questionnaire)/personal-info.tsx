@@ -217,7 +217,7 @@ export default function PersonalInfoScreen() {
               b_bl={100}
               b_br={100}
               style={{
-                paddingVertical: 8,
+                paddingVertical: 0,
                 paddingHorizontal: 24,
                 backgroundColor: '#F0E6D8',
                 borderWidth: 2,

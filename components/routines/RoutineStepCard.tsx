@@ -1,10 +1,9 @@
 // // components/routines/RoutineStepCard.tsx
 // import React from 'react';
-// import { View, Text, StyleProp, ViewStyle } from 'react-native';
+// import { View, Text, StyleProp, ViewStyle, TouchableOpacity } from 'react-native';
 // import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
-// import { ToggleSwitch } from '@/components/buttons/ToggleSwitch';
+// import { RadioButton } from '@/components/buttons/RadioButton';
 
-// // components/routines/RoutineStepCard.tsx (add isCustom prop)
 // interface RoutineStepCardProps {
 //   stepNumber: number;
 //   title: string;
@@ -13,7 +12,7 @@
 //   onToggle: (completed: boolean) => void;
 //   isLast?: boolean;
 //   isFirst?: boolean;
-//   isCustom?: boolean; // Add this
+//   isCustom?: boolean;
 //   style?: StyleProp<ViewStyle>;
 //   className?: string;
 //   contentContainerStyle?: StyleProp<ViewStyle>;
@@ -66,14 +65,23 @@
 //               </View>
 //             )}
 //           </View>
-//           <ToggleSwitch value={isCompleted} onValueChange={onToggle} />
+//           <RadioButton value={isCompleted} onValueChange={onToggle} />
 //         </View>
-//         <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
-//           {title}
-//         </Text>
-//         <Text className="mt-[6px] font-outfit text-[14px]" style={{ color: '#2E2117B2' }}>
-//           {description}
-//         </Text>
+//         <View className="flex-row items-end justify-between">
+//           <View className="flex-1">
+//             <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
+//               {title}
+//             </Text>
+//             <Text className="mt-[6px] font-outfit text-[14px]" style={{ color: '#2E2117B2' }}>
+//               {description}
+//             </Text>
+//           </View>
+//           <TouchableOpacity activeOpacity={0.8} className="ms-[10px]">
+//             <Text className="font-outfitSemi text-[14px]  " style={{ color: '#2E2117' }}>
+//               View Details
+//             </Text>
+//           </TouchableOpacity>
+//         </View>
 //       </BorderlessShadowCard>
 //     </View>
 //   );
@@ -81,7 +89,8 @@
 
 // components/routines/RoutineStepCard.tsx
 import React from 'react';
-import { View, Text, StyleProp, ViewStyle } from 'react-native';
+import { View, Text, StyleProp, ViewStyle, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { RadioButton } from '@/components/buttons/RadioButton';
 
@@ -97,6 +106,8 @@ interface RoutineStepCardProps {
   style?: StyleProp<ViewStyle>;
   className?: string;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  routineType?: string; // Add this
+  stepId?: string; // Add this for unique identification
 }
 
 export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
@@ -111,7 +122,24 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
   style,
   className = '',
   contentContainerStyle,
+  routineType,
+  stepId,
 }) => {
+  const router = useRouter();
+
+  const handleViewDetails = () => {
+    router.push({
+      pathname: '/(flow)/routines/step-details',
+      params: {
+        routineType: routineType,
+        stepId: stepId,
+        stepNumber: stepNumber,
+        title: title,
+        isCustom: String(isCustom),
+      },
+    });
+  };
+
   return (
     <View
       className={className}
@@ -148,12 +176,21 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
           </View>
           <RadioButton value={isCompleted} onValueChange={onToggle} />
         </View>
-        <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
-          {title}
-        </Text>
-        <Text className="mt-[6px] font-outfit text-[14px]" style={{ color: '#2E2117B2' }}>
-          {description}
-        </Text>
+        <View className="flex-row items-end justify-between">
+          <View className="flex-1">
+            <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
+              {title}
+            </Text>
+            <Text className="mt-[6px] font-outfit text-[14px]" style={{ color: '#2E2117B2' }}>
+              {description}
+            </Text>
+          </View>
+          <TouchableOpacity activeOpacity={0.8} className="ms-[10px]" onPress={handleViewDetails}>
+            <Text className="font-outfitSemi text-[14px]" style={{ color: '#2E2117' }}>
+              View Details
+            </Text>
+          </TouchableOpacity>
+        </View>
       </BorderlessShadowCard>
     </View>
   );
