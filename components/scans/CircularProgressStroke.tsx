@@ -164,7 +164,6 @@ const CircularProgressStroke: React.FC<CircularProgressStrokeProps> = ({
             className="font-outfitMedium text-[12px]"
             style={{
               color: '#2E211799',
-
               textShadowColor: '#FFFFFF',
               textShadowOffset: { width: 1, height: 1 },
               textShadowRadius: 2,

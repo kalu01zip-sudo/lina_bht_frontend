@@ -13,7 +13,7 @@ export interface DetectedCondition {
   progressColor?: string[];
   imageUri?: string;
   imageSource?: ImageSourcePropType;
-  faceImageUri?: string; // Added: for showing face area
+  ImageUri?: string; // Added: for showing face area
   faceArea?: { x: number; y: number; width: number; height: number }; // Added: for highlighting specific area
 }
 
@@ -64,8 +64,8 @@ export const DetectedConditionCard: React.FC<DetectedConditionCardProps> = ({
 
   // Determine which image to show
   const imageToShow =
-    showFaceImage && condition.faceImageUri
-      ? condition.faceImageUri
+    showFaceImage && condition.ImageUri
+      ? condition.ImageUri
       : condition.imageUri || condition.imageSource;
 
   return (

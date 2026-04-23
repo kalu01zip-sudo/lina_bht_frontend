@@ -7,7 +7,7 @@ import {
   Image,
   ActivityIndicator,
   useWindowDimensions,
-  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,10 +25,7 @@ import { SkinAnalysisCards } from '@/components/scans/faceScan/SkinAnalysisCards
 import { DetectedConditionsList } from '@/components/scans/DetectedConditionsList';
 import { DetectedCondition } from '@/components/scans/DetectedConditionCard';
 import { LifestyleFactors, LifestyleFactor } from '@/components/scans/LifestyleFactors';
-import { CurvedArrowTopRightIcon } from '@/components/icons';
-import PillowBadge from '@/components/buttons/PillowBadge';
-
-import { LinearGradient } from 'expo-linear-gradient';
+import { PrognosticTimeline, TimelineDay } from '@/components/scans/PrognosticTimeline';
 
 const SKIN_STATS = [
   { label: 'Hydration', value: '85', color: '#60A5FA' },
@@ -171,7 +168,7 @@ const AiAnalysisCompleteScreen = () => {
       description: 'Your skin barrier is slightly compromised, likely due to over-exfoliation.',
       progressValue: 45,
       progressColor: ['#FBBF24', '#D97706'],
-      faceImageUri: faceImageUri,
+      ImageUri: faceImageUri,
       faceArea: { x: 100, y: 150, width: 80, height: 80 },
     },
     {
@@ -181,7 +178,7 @@ const AiAnalysisCompleteScreen = () => {
       description: 'Requires attention and targeted care.',
       progressValue: 25,
       progressColor: ['#60A5FA', '#2563EB'],
-      faceImageUri: faceImageUri,
+      ImageUri: faceImageUri,
     },
     {
       id: 'pores',
@@ -190,9 +187,50 @@ const AiAnalysisCompleteScreen = () => {
       description: 'Normal appearance, slight congestion on nose.',
       progressValue: 25,
       progressColor: ['#A78BFA', '#8B5CF6'],
-      faceImageUri: faceImageUri,
+      ImageUri: faceImageUri,
     },
   ];
+
+  // In your main screen, define the prognostic days with future flags
+  const prognosticDays: TimelineDay[] = [
+    {
+      id: 'today',
+      title: 'Today',
+      subtitle: '(Fragile Barrier)',
+      imageUri: faceImageUri,
+      isFuture: false,
+    },
+    {
+      id: 'day7',
+      title: '+7 Days',
+      subtitle: '(Prediction 1)',
+      metrics: [
+        { label: 'Hydration', value: '+18%', color: '#10B981' },
+        { label: 'Redness', value: '-12%', color: '#10B981' },
+      ],
+      imageUri: faceImageUri,
+      isFuture: true,
+      improvementPercentage: 18,
+    },
+    {
+      id: 'day14',
+      title: '+14 Days',
+      subtitle: '(Prediction 2)',
+      metrics: [
+        { label: 'Barrier', value: '92%', color: '#10B981' },
+        { label: 'Evenness', value: '+25%', color: '#10B981' },
+      ],
+      imageUri: faceImageUri,
+      isFuture: true,
+      improvementPercentage: 25,
+    },
+  ];
+
+  // Inside your component, after faceImageUri is defined:
+  // const prognosticDays = PROGNOSTIC_DAYS.map((day) => ({
+  //   ...day,
+  //   imageUri: faceImageUri,
+  // }));
 
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
@@ -213,12 +251,12 @@ const AiAnalysisCompleteScreen = () => {
             transform: [{ translateY: isContentReady ? 0 : 10 }],
           }}>
           {/* NEW COMPONENT CALL */}
-          <AnalysingResultScoreCard stats={SKIN_STATS} />
+          <AnalysingResultScoreCard stats={SKIN_STATS} title="Face Scan Score Profile" />
 
           {/* Captured Angles Preview */}
           {captures.length > 0 && (
             <View className="">
-              <Text className="mb-2 text-start font-outfitMedium text-[16px] text-[#2E2117]">
+              <Text className="mb-2 mt-6 text-start font-outfitMedium text-[16px] text-[#2E2117]">
                 Captured Angles
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6">
@@ -251,7 +289,7 @@ const AiAnalysisCompleteScreen = () => {
 
           {/* Skin Analysis Cards - Face Image & Hydration Chart */}
           <SkinAnalysisCards
-            faceImageUri={faceImageUri}
+            imageUri={faceImageUri}
             hydrationLevel={72}
             rednessScore={24}
             rednessProgress={38}
@@ -270,208 +308,36 @@ const AiAnalysisCompleteScreen = () => {
           <LifestyleFactors factors={LIFESTYLE_FACTORS} title="Lifestyle Factors" showIcon={true} />
 
           {/* Header */}
-          <View className="mt-6">
-            <View className="w-full flex-row justify-between ">
-              <View className=" flex-row items-center gap-3 ">
-                <CurvedArrowTopRightIcon size={24} color={'#977857'} />
-                <Text className="text-start font-outfitMedium text-[16px] text-[#2E2117]">
-                  Prognostic Timeline
-                </Text>
-              </View>
-              <PillowBadge
-                title="14 Days"
-                style={{ backgroundColor: '#e9e3dc', paddingHorizontal: 12, paddingVertical: 2 }}
-                textStyle={{ color: '#7A5D3E', fontSize: 12 }}
-              />
-            </View>
-            {/* <View
-              className="mt-3 w-full  "
-              style={{
-                backgroundColor: 'red',
-                padding: 12,
-                borderTopWidth: 5,
-                borderBottomWidth: 5,
-                borderLeftWidth: 1,
-                borderRightWidth: 1,
-                borderLeftColor: '#FFFFFF99',
-                borderRightColor: '#FFFFFF99',
-                borderTopColor: '#faf7f4',
-                borderBottomColor: '#faf7f4',
-                borderRadius: 24,
-
-                minHeight: 244,
-              }}>
-              <Text>Hello there</Text>
-            </View> */}
-
-            <ImageBackground
-              source={require('@/assets/images/prognostic_timeline_bg_face.jpg')}
-              imageStyle={{ borderRadius: 24 }} // Ensures the image follows the container curve
-              className="mt-3 w-full"
-              style={{
-                minHeight: 244,
-                borderWidth: 0.5,
-                borderTopWidth: 3,
-                borderBottomWidth: 3,
-                borderColor: '#FFFFFF99', // Default side color
-                borderTopColor: '#faf7f4',
-                borderBottomColor: '#faf7f4',
-                borderRadius: 24,
-                overflow: 'hidden', // Required for borderRadius to work on children
-              }}>
-              <LinearGradient
-                // Left to Right: 90deg equivalent is start: [0, 0], end: [1, 0]
-                colors={[
-                  '#F6E7D5',
-                  'rgba(242, 221, 197, 0.94)',
-                  'rgba(239, 222, 202, 0.6)',
-                  'rgba(255, 234, 208, 0.44)',
-                  'rgba(232, 221, 208, 0)',
-                ]}
-                locations={[0, 0.52, 0.67, 0.82, 1]} // Matches your % stops
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                }}
-              />
-
-              {/* Content Layer */}
-              <View style={{ padding: 12 }}>
-                <View className="w-full flex-row items-center ">
-                  <View
-                    className="h-16 w-16  "
-                    style={{
-                      backgroundColor: 'red',
-                      borderRadius: 16,
-                      borderWidth: 0.5,
-                      borderTopWidth: 2,
-                      borderBottomWidth: 2,
-                      borderColor: '#FFFFFF99', // Default side color
-                      borderTopColor: '#faf7f4',
-                      borderBottomColor: '#faf7f4',
-                    }}
-                  />
-                  <View
-                    className=""
-                    style={{
-                      width: 12,
-                      height: 12,
-                      backgroundColor: '#977857',
-                      borderRadius: 999,
-                      marginRight: 12,
-                      marginLeft: 9,
-                    }}
-                  />
-                  <View>
-                    <Text className="font-outfitMedium text-[14px] " style={{ color: '#2E2117' }}>
-                      Today
-                    </Text>
-                    <Text className=" font-outfit text-[12px] text-[#2E211799] ">
-                      (Fragile Barrier)
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <View style={{ padding: 12 }}>
-                <View className="w-full flex-row items-center ">
-                  <View
-                    className="h-16 w-16  "
-                    style={{
-                      backgroundColor: 'red',
-                      borderRadius: 16,
-                      borderWidth: 0.5,
-                      borderTopWidth: 2,
-                      borderBottomWidth: 2,
-                      borderColor: '#FFFFFF99', // Default side color
-                      borderTopColor: '#faf7f4',
-                      borderBottomColor: '#faf7f4',
-                    }}
-                  />
-                  <View
-                    className=""
-                    style={{
-                      width: 12,
-                      height: 12,
-                      backgroundColor: '#977857',
-                      borderRadius: 999,
-                      marginRight: 12,
-                      marginLeft: 9,
-                    }}
-                  />
-                  <View>
-                    <Text className="font-outfitMedium text-[14px] " style={{ color: '#2E2117' }}>
-                      +7 Days
-                    </Text>
-                    <Text className=" font-outfit text-[12px] text-[#2E211799] ">
-                      (Prediction 1)
-                    </Text>
-                    <Text className=" font-outfitMedium text-[12px] text-[#7A8B6A] ">
-                      Hydration +18%
-                    </Text>
-                    <Text className=" font-outfitMedium text-[12px] text-[#7A8B6A] ">
-                      Redness -12%
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={{ padding: 12 }}>
-                <View className="w-full flex-row items-center ">
-                  <View
-                    className="h-16 w-16  "
-                    style={{
-                      backgroundColor: 'red',
-                      borderRadius: 16,
-                      borderWidth: 0.5,
-                      borderTopWidth: 2,
-                      borderBottomWidth: 2,
-                      borderColor: '#FFFFFF99', // Default side color
-                      borderTopColor: '#faf7f4',
-                      borderBottomColor: '#faf7f4',
-                    }}
-                  />
-                  <View
-                    className=""
-                    style={{
-                      width: 12,
-                      height: 12,
-                      backgroundColor: '#977857',
-                      borderRadius: 999,
-                      marginRight: 12,
-                      marginLeft: 9,
-                    }}
-                  />
-                  <View>
-                    <Text className="font-outfitMedium text-[14px] " style={{ color: '#2E2117' }}>
-                      +14 Days
-                    </Text>
-                    <Text className=" font-outfit text-[12px] text-[#2E211799] ">
-                      (Prediction 2)
-                    </Text>
-                    <Text className=" font-outfitMedium text-[12px] text-[#7A8B6A] ">
-                      Barrier 92%
-                    </Text>
-                    <Text className=" font-outfitMedium text-[12px] text-[#7A8B6A] ">
-                      Evenness +25%
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </ImageBackground>
-          </View>
+          <PrognosticTimeline
+            days={prognosticDays}
+            duration="14 Days"
+            backgroundImage={require('@/assets/images/prognostic_timeline_bg_face.jpg')}
+            title="Prognostic Timeline"
+            showIcon={true}
+            onDayPress={(day) => {
+              console.log('Day pressed:', day.title);
+              // Navigate to day details
+            }}
+          />
           {/* Button */}
           <PrimaryButton
             title="Generate Your Routine"
             onPress={() => {
               router.push('/(main)/routines');
             }}
-            style={{ marginBottom: 20, marginTop: 24 }}
+            style={{ marginBottom: 20, marginTop: 32 }}
           />
+
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/(main)');
+            }}
+            activeOpacity={0.6}
+            className="mt-4 py-5">
+            <Text className="text-center font-outfitMedium text-[20px] text-[#361A0D]">
+              Skip this product
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

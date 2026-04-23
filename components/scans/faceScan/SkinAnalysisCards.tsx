@@ -5,7 +5,7 @@ import { GradientProgressBar } from '@/components/GradientProgressBar';
 import CircularProgressStroke from '../CircularProgressStroke';
 
 interface SkinAnalysisCardsProps {
-  faceImageUri?: string;
+  imageUri?: string;
   hydrationLevel: number;
   rednessScore: number;
   rednessProgress: number;
@@ -13,7 +13,7 @@ interface SkinAnalysisCardsProps {
 }
 
 export const SkinAnalysisCards: React.FC<SkinAnalysisCardsProps> = ({
-  faceImageUri,
+  imageUri,
   hydrationLevel,
   rednessScore,
   rednessProgress,
@@ -26,7 +26,7 @@ export const SkinAnalysisCards: React.FC<SkinAnalysisCardsProps> = ({
   if (isSmallScreen) {
     // Stack vertically on small screens
     return (
-      <View className="gap-4">
+      <View className="gap-5">
         {/* Left Card - Face Image & Redness */}
         <View
           style={{
@@ -38,9 +38,9 @@ export const SkinAnalysisCards: React.FC<SkinAnalysisCardsProps> = ({
           }}>
           {/* Face Image */}
           <View className="w-full overflow-hidden rounded-xl">
-            {faceImageUri ? (
+            {imageUri ? (
               <Image
-                source={{ uri: faceImageUri }}
+                source={{ uri: imageUri }}
                 style={{ width: '100%', height: 200 }}
                 resizeMode="cover"
               />
@@ -141,7 +141,7 @@ export const SkinAnalysisCards: React.FC<SkinAnalysisCardsProps> = ({
 
   // Horizontal layout for larger screens - equal heights using flex
   return (
-    <View className="flex-row items-stretch justify-between gap-4">
+    <View className="flex-row items-stretch justify-between gap-3">
       {/* Left Card - Face Image & Redness */}
       <View
         className="flex-1"
@@ -154,9 +154,9 @@ export const SkinAnalysisCards: React.FC<SkinAnalysisCardsProps> = ({
         }}>
         {/* Face Image */}
         <View className="w-full overflow-hidden rounded-xl">
-          {faceImageUri ? (
+          {imageUri ? (
             <Image
-              source={{ uri: faceImageUri }}
+              source={{ uri: imageUri }}
               style={{ width: '100%', height: 158 }}
               resizeMode="cover"
             />

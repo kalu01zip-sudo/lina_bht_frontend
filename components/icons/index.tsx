@@ -96,3 +96,5 @@ export { SecureIcon } from './SecureIcon';
 export { MinusIcon } from './MinusIcon';
 
 export { CircleCornerCuttedIcon } from './CircleCornerCuttedIcon';
+
+export { BookIcon } from './BookIcon';
