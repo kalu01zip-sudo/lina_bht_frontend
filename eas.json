@@ -5,6 +5,7 @@
   "build": {
     "development": {
       "distribution": "internal",
+      "developmentClient": true,
       "android": {
         "buildType": "apk"
       }
@@ -16,7 +17,10 @@
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   }
 }

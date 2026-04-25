@@ -21,6 +21,8 @@ import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
 import { CheckIconButton } from '@/components/CheckIconButton';
 import InputField from '@/components/inputs/Input';
+import VectorBg from '@/components/VectorBg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ALLERGY_OPTIONS = [
   { id: 'fragrance', label: 'Fragrance', value: 'Fragrance' },
@@ -29,12 +31,12 @@ const ALLERGY_OPTIONS = [
   { id: 'phenoxyethanol', label: 'Phenoxyethanol', value: 'Phenoxyethanol' },
   { id: 'retinol', label: 'Retinol', value: 'Retinol' },
   { id: 'salicylic-acid', label: 'Salicylic Acid', value: 'Salicylic Acid' },
-  { id: 'benzoyl-peroxide', label: 'Benzoyl Peroxide', value: 'Benzoyl Peroxide' },
-  { id: 'alcohol-denat', label: 'Alcohol Denat', value: 'Alcohol Denat' },
-  { id: 'oxybenzone', label: 'Oxybenzone', value: 'Oxybenzone' },
-  { id: 'nickel', label: 'Nickel', value: 'Nickel' },
-  { id: 'sulfates', label: 'Sulfates', value: 'Sulfates' },
-  { id: 'alcohol', label: 'Alcohol', value: 'Alcohol' },
+  // { id: 'benzoyl-peroxide', label: 'Benzoyl Peroxide', value: 'Benzoyl Peroxide' },
+  // { id: 'alcohol-denat', label: 'Alcohol Denat', value: 'Alcohol Denat' },
+  // { id: 'oxybenzone', label: 'Oxybenzone', value: 'Oxybenzone' },
+  // { id: 'nickel', label: 'Nickel', value: 'Nickel' },
+  // { id: 'sulfates', label: 'Sulfates', value: 'Sulfates' },
+  // { id: 'alcohol', label: 'Alcohol', value: 'Alcohol' },
 ];
 
 export default function AllergiesScreen() {
@@ -153,7 +155,13 @@ export default function AllergiesScreen() {
   ];
 
   if (isRendering) {
-    return <LoadingScreen loadingText="Loading allergy options..." transparent={true} />;
+    return (
+      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-transparent ">
+        {/* SVG Background */}
+        <VectorBg />
+        <LoadingScreen loadingText="Loading allergy options..." transparent />
+      </SafeAreaView>
+    );
   }
 
   if (renderError) {
@@ -172,6 +180,8 @@ export default function AllergiesScreen() {
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets={true}>
+        {/* SVG Background */}
+        <VectorBg />
         <View
           className="px-container py-9"
           style={{

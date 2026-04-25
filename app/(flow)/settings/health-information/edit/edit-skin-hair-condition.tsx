@@ -34,6 +34,7 @@ import {
   StraightHairIcon,
   WavyHairIcon,
 } from '@/components/icons';
+import VectorBg from '@/components/VectorBg';
 
 // ==================== SKIN TYPE (with icons) ====================
 const SKIN_TYPE = [
@@ -85,6 +86,7 @@ const SKIN_CONCERNS_OPTIONS = [
   { id: 'irritation', label: 'Irritation, redness', value: 'irritation_redness' },
   { id: 'pigmentation', label: 'Pigmentation', value: 'pigmentation' },
   { id: 'dullness', label: 'Dullness', value: 'dullness' },
+  { id: 'none', label: 'No concerns', value: 'none' },
   { id: 'skin_other', label: 'Other', value: 'skin_other' },
 ];
 
@@ -130,6 +132,7 @@ const HAIR_CONCERNS_OPTIONS = [
   { id: 'dandruff', label: 'Dandruff', value: 'dandruff' },
   { id: 'oily_scalp', label: 'Oily Scalp', value: 'oily_scalp' },
   { id: 'dry_scalp', label: 'Dry Scalp', value: 'dry_scalp' },
+  { id: 'none', label: 'No concerns', value: 'none' },
   { id: 'hair_other', label: 'Other', value: 'hair_other' },
 ];
 
@@ -368,8 +371,10 @@ export default function EditSkinHairConditionScreen() {
 
   if (isRendering || isLoading) {
     return (
-      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-        <LoadingScreen loadingText="Loading skin & hair data..." />
+      <SafeAreaView edges={['top', 'right']} className="flex-1">
+        {/* Vector BG */}
+        <VectorBg />
+        <LoadingScreen loadingText="Loading skin & hair data..." transparent={true} />
       </SafeAreaView>
     );
   }
@@ -386,7 +391,8 @@ export default function EditSkinHairConditionScreen() {
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
       <CustomHeader title="Edit Skin & Hair" height={50} backButton={true} />
-
+      {/* Vector BG */}
+      <VectorBg />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}

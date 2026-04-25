@@ -31,6 +31,7 @@ import {
   PlusIcon,
 } from '@/components/icons';
 import { CheckInCircleIcon } from '@/components/icons/CheckInCircleIcon';
+import VectorBg from '@/components/VectorBg';
 
 const CURRENT_PHASE = [
   {
@@ -64,6 +65,11 @@ const CURRENT_PHASE = [
     leftIcon: (color: string) => (
       <MenoPauseIcon width={24} height={24} color={color} style={{ marginLeft: 6 }} />
     ),
+  },
+  {
+    id: 'none',
+    label: 'None',
+    value: 'none',
   },
   {
     id: 'other',
@@ -214,8 +220,10 @@ export default function EditLifePhaseScreen() {
 
   if (isRendering || isLoading) {
     return (
-      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-        <LoadingScreen loadingText="Loading..." />
+      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-transparent ">
+        {/* SVG Background */}
+        <VectorBg />
+        <LoadingScreen loadingText="Loading Life Phase options..." transparent />
       </SafeAreaView>
     );
   }
@@ -230,9 +238,10 @@ export default function EditLifePhaseScreen() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
+    <SafeAreaView edges={['top', 'right']} className="flex-1 bg-transparent">
       <CustomHeader title="Edit Life Phase" height={50} backButton={true} />
-
+      {/* SVG Background */}
+      <VectorBg />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}

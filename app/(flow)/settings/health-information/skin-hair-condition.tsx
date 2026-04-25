@@ -13,6 +13,7 @@ import ErrorScreen from '@/components/errors/ErrorScreen';
 import PrimaryVariantButton from '@/components/buttons/PrimaryVariantButton';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { InfoRow } from '@/components/personalInfo/InfoRow';
+import VectorBg from '@/components/VectorBg';
 
 // Skin type mapping for display
 const SKIN_TYPE_LABELS: Record<string, string> = {
@@ -133,7 +134,9 @@ export default function SkinHairConditionSettingsScreen() {
 
   if (isRendering || isLoading) {
     return (
-      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
+      <SafeAreaView edges={['top', 'right']} className="flex-1">
+        {/* Vector BG */}
+        <VectorBg />
         <LoadingScreen loadingText="Loading skin & hair information..." />
       </SafeAreaView>
     );
@@ -151,7 +154,8 @@ export default function SkinHairConditionSettingsScreen() {
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
       <CustomHeader title="Skin & Hair Condition" height={50} backButton={true} />
-
+      {/* Vector BG */}
+      <VectorBg />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

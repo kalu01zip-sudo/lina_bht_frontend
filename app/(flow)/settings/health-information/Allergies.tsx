@@ -10,6 +10,7 @@ import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
 import PrimaryVariantButton from '@/components/buttons/PrimaryVariantButton';
 import { InfoRow } from '@/components/personalInfo/InfoRow';
+import VectorBg from '@/components/VectorBg';
 
 export default function AllergiesSettingsScreen() {
   const router = useRouter();
@@ -73,7 +74,9 @@ export default function AllergiesSettingsScreen() {
 
   if (isRendering || isLoading) {
     return (
-      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
+      <SafeAreaView edges={['top', 'right']} className="flex-1 ">
+        {/* SVG Background */}
+        <VectorBg />
         <LoadingScreen loadingText="Loading allergies..." />
       </SafeAreaView>
     );
@@ -91,7 +94,8 @@ export default function AllergiesSettingsScreen() {
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
       <CustomHeader title="Allergies" height={50} backButton={true} />
-
+      {/* SVG Background */}
+      <VectorBg />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

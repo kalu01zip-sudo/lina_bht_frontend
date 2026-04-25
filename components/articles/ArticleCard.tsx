@@ -44,7 +44,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onPress }) =>
           b_br={24}
           style={{
             paddingVertical: 16,
-            paddingHorizontal: 24,
+            paddingHorizontal: 16,
           }}>
           <View className="flex-row gap-4">
             {/* Image */}

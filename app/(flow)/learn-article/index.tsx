@@ -85,7 +85,7 @@ export default function LearnArticleScreen() {
             transform: [{ translateY: isContentReady ? 0 : 10 }],
           }}>
           {/* Search Bar */}
-          <View className="mb-4  ">
+          <View className="mb-1  ">
             <InputField
               value={searchQuery}
               handler={(_, value) => handleSearch(value)}
@@ -109,7 +109,7 @@ export default function LearnArticleScreen() {
           />
 
           {/* Recommended For You Section */}
-          <View className="mt-2">
+          <View className="mt-3">
             <Text className="mb-4 font-outfitMedium text-[18px]" style={{ color: '#361A0D' }}>
               Recommended for You
             </Text>

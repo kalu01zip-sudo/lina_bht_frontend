@@ -1,4 +1,3 @@
-
 // app/(questionnaire)/skin-hair-condition.tsx
 import React, { useState } from 'react';
 import { View, Text, ScrollView, useWindowDimensions, Animated, Easing } from 'react-native';
@@ -76,6 +75,7 @@ const SKIN_CONCERNS_OPTIONS = [
   { id: 'irritation', label: 'Irritation, redness', value: 'irritation_redness' },
   { id: 'pigmentation', label: 'Pigmentation', value: 'pigmentation' },
   { id: 'dullness', label: 'Dullness', value: 'dullness' },
+  { id: 'none', label: 'No concerns', value: 'none' },
   { id: 'skin_other', label: 'Other', value: 'skin_other' },
 ];
 
@@ -121,6 +121,7 @@ const HAIR_CONCERNS_OPTIONS = [
   { id: 'dandruff', label: 'Dandruff', value: 'dandruff' },
   { id: 'oily_scalp', label: 'Oily Scalp', value: 'oily_scalp' },
   { id: 'dry_scalp', label: 'Dry Scalp', value: 'dry_scalp' },
+  { id: 'none', label: 'No concerns', value: 'none' },
   { id: 'hair_other', label: 'Other', value: 'hair_other' },
 ];
 

@@ -20,12 +20,12 @@ const ALLERGY_OPTIONS = [
   { id: 'phenoxyethanol', label: 'Phenoxyethanol', value: 'Phenoxyethanol' },
   { id: 'retinol', label: 'Retinol', value: 'Retinol' },
   { id: 'salicylic-acid', label: 'Salicylic Acid', value: 'Salicylic Acid' },
-  { id: 'benzoyl-peroxide', label: 'Benzoyl Peroxide', value: 'Benzoyl Peroxide' },
-  { id: 'alcohol-denat', label: 'Alcohol Denat', value: 'Alcohol Denat' },
-  { id: 'oxybenzone', label: 'Oxybenzone', value: 'Oxybenzone' },
-  { id: 'nickel', label: 'Nickel', value: 'Nickel' },
-  { id: 'sulfates', label: 'Sulfates', value: 'Sulfates' },
-  { id: 'alcohol', label: 'Alcohol', value: 'Alcohol' },
+  // { id: 'benzoyl-peroxide', label: 'Benzoyl Peroxide', value: 'Benzoyl Peroxide' },
+  // { id: 'alcohol-denat', label: 'Alcohol Denat', value: 'Alcohol Denat' },
+  // { id: 'oxybenzone', label: 'Oxybenzone', value: 'Oxybenzone' },
+  // { id: 'nickel', label: 'Nickel', value: 'Nickel' },
+  // { id: 'sulfates', label: 'Sulfates', value: 'Sulfates' },
+  // { id: 'alcohol', label: 'Alcohol', value: 'Alcohol' },
 ];
 
 export default function AllergiesScreen() {

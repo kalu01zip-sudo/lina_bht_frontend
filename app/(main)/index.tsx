@@ -71,7 +71,6 @@
 //         style={{
 //           marginTop: LAYOUT.innerPage.marginTop,
 //         }}>
-
 //         <SkinHealthCard
 //           faceScore={homeData.faceScore}
 //           hairScore={homeData.hairScore}

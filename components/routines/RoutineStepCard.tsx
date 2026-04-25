@@ -40,7 +40,8 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
 
   const handleViewDetails = () => {
     router.push({
-      pathname: '/(flow)/routines/step-details',
+      // pathname: '/(flow)/routines/step-details',
+      pathname: '/(flow)/lymphatic-massage',
       params: {
         routineType: routineType,
         stepId: stepId,

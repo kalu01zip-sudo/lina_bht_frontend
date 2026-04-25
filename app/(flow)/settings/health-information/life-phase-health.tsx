@@ -14,6 +14,7 @@ import PrimaryVariantButton from '@/components/buttons/PrimaryVariantButton';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { InfoRow } from '@/components/personalInfo/InfoRow';
 import { MenoPauseIcon, PeriodIcon, PostpartumIcon, PregnantIcon } from '@/components/icons';
+import VectorBg from '@/components/VectorBg';
 
 const CURRENT_PHASE = [
   {
@@ -35,6 +36,11 @@ const CURRENT_PHASE = [
     id: 'menopause',
     label: 'Menopause',
     value: 'menopause',
+  },
+  {
+    id: 'none',
+    label: 'None',
+    value: 'none',
   },
   {
     id: 'other',
@@ -123,7 +129,9 @@ export default function LifePhaseHealthScreen() {
 
   if (isRendering || isLoading) {
     return (
-      <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
+      <SafeAreaView edges={['top', 'right']} className="flex-1">
+        {/* SVG Background */}
+        <VectorBg />
         <LoadingScreen loadingText="Loading health information..." />
       </SafeAreaView>
     );
@@ -141,7 +149,8 @@ export default function LifePhaseHealthScreen() {
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
       <CustomHeader title="Life Phase & Health" height={50} backButton={true} />
-
+      {/* SVG Background */}
+      <VectorBg />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
