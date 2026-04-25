@@ -4,7 +4,10 @@
     "slug": "gixy",
     "version": "1.0.0",
     "scheme": "gixy",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -41,7 +44,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -64,7 +69,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "bb81cd0e-573a-4b0d-90a4-6e7909163580"
+        "projectId": "4a2ecc3a-1595-45ab-bebe-da789a7c9b51"
       }
     }
   }
