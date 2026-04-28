@@ -243,8 +243,8 @@ const Profile = () => {
                 }}
                 b_tl={24}
                 b_tr={24}
-                b_bl={24}
-                b_br={24}
+                b_bl={0}
+                b_br={0}
                 style={{
                   paddingVertical: 16,
                   paddingHorizontal: 24,
@@ -268,18 +268,18 @@ const Profile = () => {
               </BorderlessShadowCard>
 
               {/* Wellness & Cycle */}
-              {/* <BorderlessShadowCard
+              <BorderlessShadowCard
                 onPress={() => {
                   router.push('/(flow)/wellness');
                 }}
                 b_tl={0}
                 b_tr={0}
-                b_bl={0}
-                b_br={0}
+                b_bl={24}
+                b_br={24}
                 style={{
                   paddingVertical: 16,
                   paddingHorizontal: 24,
-                  marginTop: 12,
+                  marginTop: 8,
                 }}>
                 <View className="flex-row items-center">
                   <View className="flex-1 flex-row items-center gap-3">
@@ -290,7 +290,7 @@ const Profile = () => {
                   </View>
                   <ArrowRightHalfIcon size={16} color="#361A0D" />
                 </View>
-              </BorderlessShadowCard> */}
+              </BorderlessShadowCard>
             </View>
           </View>
 

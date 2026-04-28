@@ -1,98 +1,3 @@
-// // app/(flow)/lymphatic-massage/index.tsx
-// import React from 'react';
-// import { View, Text, ScrollView, FlatList, RefreshControl, Platform } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// import CustomHeader from '@/components/header/CustomHeader';
-// import { LAYOUT } from '@/constants/constants';
-// import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
-// import { FlameIcon, LymphaticMassageIcon, ThreeStarsIcon } from '@/components/icons';
-// import IconBadge from '@/components/icons/modified/IconBadge';
-// import { TutorialCard } from '@/components/tutorials/TutorialCard';
-// import { useTutorials } from '@/hooks/useTutorials';
-// import LoadingScreen from '@/components/loading/LoadingScreen';
-// import ErrorScreen from '@/components/errors/ErrorScreen';
-// import { useScreenReady } from '@/hooks/useScreenReady';
-
-// const LymphaticMassageScreen = () => {
-//   const { tutorials, isLoading, error, refetch } = useTutorials();
-
-//   const { isRendering, isContentReady, renderError } = useScreenReady({
-//     dependencies: [tutorials],
-//     delay: 100,
-//     initialReady: false,
-//   });
-
-//   if (isRendering || isLoading) {
-//     return (
-//       <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-//         <LoadingScreen loadingText="Preparing Lymphatic Massage..." />
-//       </SafeAreaView>
-//     );
-//   }
-
-//   if (renderError || error) {
-//     return (
-//       <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-//         <CustomHeader title="Lymphatic Massage" height={50} backButton={true} />
-//         <ErrorScreen message={error || renderError || 'Failed to load'} onRetry={refetch} />
-//       </SafeAreaView>
-//     );
-//   }
-
-//   return (
-//     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-//       <CustomHeader title="Lymphatic Massage" height={50} backButton={true} />
-
-//       <ScrollView
-//         contentContainerStyle={{
-//           paddingBottom: LAYOUT.screen.scrollViewPaddingBottom,
-//           paddingTop: 10,
-//           flexGrow: 1,
-//         }}
-//         className="flex-1"
-//         refreshControl={
-//           <RefreshControl refreshing={isLoading} onRefresh={refetch} colors={['#977857']} />
-//         }>
-//         <View
-//           className="px-container"
-//           style={{
-//             opacity: isContentReady ? 1 : 0,
-//             transform: [{ translateY: isContentReady ? 0 : 10 }],
-//           }}>
-//           {/* Tutorials Section with FlatList */}
-//           <Text className="mt-0 font-outfitMedium text-[16px]" style={{ color: '#2A2118' }}>
-//             Tutorials
-//           </Text>
-
-//           {tutorials.length === 0 ? (
-//             <BorderlessShadowCard
-//               b_tl={24}
-//               b_tr={24}
-//               b_bl={24}
-//               b_br={24}
-//               style={{ paddingVertical: 32, paddingHorizontal: 24, marginTop: 12 }}>
-//               <Text className="text-center font-outfit text-[14px]" style={{ color: '#2E211780' }}>
-//                 No tutorials available yet
-//               </Text>
-//             </BorderlessShadowCard>
-//           ) : (
-//             tutorials.map((tutorial, index) => (
-//               <TutorialCard
-//                 key={tutorial.id}
-//                 tutorial={tutorial}
-//                 isFirst={index === 0}
-//                 isLast={index === tutorials.length - 1}
-//               />
-//             ))
-//           )}
-//         </View>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default LymphaticMassageScreen;
-
 // app/(flow)/lymphatic-massage/index.tsx
 import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView, RefreshControl } from 'react-native';
@@ -117,7 +22,7 @@ const TUTORIAL_CATEGORIES: Category[] = [
   { id: '2', name: 'Face' },
   { id: '3', name: 'Neck' },
   { id: '4', name: 'Arms' },
-  { id: '5', name: 'Abdomen' },
+  { id: '5', name: 'Leg' },
 ];
 
 const LymphaticMassageScreen = () => {

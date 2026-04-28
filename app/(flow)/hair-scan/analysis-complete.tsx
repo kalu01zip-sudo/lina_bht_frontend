@@ -18,14 +18,19 @@ import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import { AngleCapture } from '@/components/scans/MultiAngleCameraScan';
 import { useScreenReady } from '@/hooks/useScreenReady';
-import LoadingScreen from '@/components/loading/LoadingScreen';
-import ErrorScreen from '@/components/errors/ErrorScreen';
 import AnalysingResultScoreCard from '@/components/scans/AnalysingResultScoreCard';
 import { DetectedConditionsList } from '@/components/scans/DetectedConditionsList';
 import { DetectedCondition } from '@/components/scans/DetectedConditionCard';
 import { LifestyleFactors, LifestyleFactor } from '@/components/scans/LifestyleFactors';
 import { PrognosticTimeline, TimelineDay } from '@/components/scans/PrognosticTimeline';
 import { HairAnalysisCards } from '@/components/scans/faceScan/HairAnalysisCards';
+import { RecipesSection, RecommendedRecipe } from '@/components/scans/RecipesSection';
+import {
+  FoodRecommendationSection,
+  RecommendedFood,
+} from '@/components/scans/FoodRecommendationSection';
+import { KeyNutrientsSection, Nutrient } from '@/components/scans/KeyNutrientsSection';
+import { HydrationTargetCard } from '@/components/scans/HydrationTargetCard';
 
 // Hair analysis stats
 const HAIR_STATS = [
@@ -55,6 +60,116 @@ const LIFESTYLE_FACTORS: LifestyleFactor[] = [
     label: 'Sleep Quality',
     value: 68,
     gradientColors: ['#7A8B6A', '#059669'],
+  },
+];
+
+// Static nutrients data - just like the others!
+const NUTRIENTS_DATA: Nutrient[] = [
+  {
+    id: 'omega-3',
+    name: 'Omega-3',
+    description: 'Reduces inflammation, strengthens the skin barrier and improves hydration.',
+    imageUrl: require('@/assets/images/nutrition_static_images/omega-3.png'),
+  },
+  {
+    id: 'zinc',
+    name: 'Zinc',
+    description: 'Supports skin healing, reduces inflammation, and helps with acne management.',
+    imageUrl: require('@/assets/images/nutrition_static_images/zinc.png'),
+  },
+  {
+    id: 'vitamin-c',
+    name: 'Vitamin C',
+    description: 'Boosts collagen production, brightens skin, and provides antioxidant protection.',
+    imageUrl: require('@/assets/images/nutrition_static_images/vitamin-c.png'),
+  },
+  {
+    id: 'magnesium',
+    name: 'Magnesium',
+    description:
+      'Supports skin cell repair, balances the microbiome, and calms persistent inflammation.',
+    imageUrl: require('@/assets/images/nutrition_static_images/magnesium.png'),
+  },
+];
+
+// Static recommendation food data
+const RECOMMENDED_FOODS_DATA: RecommendedFood[] = [
+  {
+    id: 'avocado',
+    name: 'Avocado',
+    description: 'Healthy fats',
+    imageUrl: require('@/assets/images/nutrition_static_images/avocado.png'),
+  },
+  {
+    id: 'salmon',
+    name: 'Salmon',
+    description: 'Omega-3',
+    imageUrl: require('@/assets/images/nutrition_static_images/salmon.png'),
+  },
+  {
+    id: 'blueberries',
+    name: 'Blueberries',
+    description: 'Antioxidants',
+    imageUrl: require('@/assets/images/nutrition_static_images/blueberries.png'),
+  },
+  {
+    id: 'spinach',
+    name: 'Spinach',
+    description: 'Magnesium',
+    imageUrl: require('@/assets/images/nutrition_static_images/spinach.png'),
+  },
+  {
+    id: 'chiaseeds',
+    name: 'Chia Seeds',
+    description: 'Antioxidants',
+    imageUrl: require('@/assets/images/nutrition_static_images/chiaseeds.png'),
+  },
+  {
+    id: 'almonds',
+    name: 'Almonds',
+    description: 'Vitamin E',
+    imageUrl: require('@/assets/images/nutrition_static_images/almonds.png'),
+  },
+];
+
+const RECOMMENDED_RECIPES_DATA: RecommendedRecipe[] = [
+  {
+    id: 'avocado-smoothie',
+    title: 'Avocado & Berry Smoothie',
+    description: 'Packed with healthy fats and antioxidants for glowing skin.',
+    imageUrl: require('@/assets/images/nutrition_static_images/recipe_1.jpg'),
+    tags: ['Breakfast', 'Quick'],
+  },
+  {
+    id: 'salmon-bowl',
+    title: 'Omega-3 Salmon Bowl',
+    description: 'Rich in omega-3 fatty acids to reduce inflammation.',
+    imageUrl: require('@/assets/images/nutrition_static_images/recipe_2.jpg'),
+    tags: ['Lunch', 'High Protein'],
+  },
+  {
+    id: 'berry-parfait',
+    title: 'Antioxidant Berry Parfait',
+    description: 'Loaded with vitamin C and antioxidants for skin repair.',
+    imageUrl: require('@/assets/images/nutrition_static_images/recipe_3.jpg'),
+    tags: ['Breakfast', 'Dessert'],
+  },
+  {
+    id: 'spinach-salad',
+    title: 'Magnesium Rich Spinach Salad',
+    description: 'Supports skin cell repair and reduces inflammation.',
+    // imageUrl: require('@/assets/images/nutrition_static_images/recipe_2.jpg'),
+    imageUrl:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSviMY8z9K4g1wxRIUBbyTZ5B8lWTN6_ECvjQ&s',
+    tags: ['Lunch', 'Vegetarian'],
+  },
+  {
+    id: 'chia-pudding',
+    title: 'Chia Seed Pudding',
+    description: 'Rich in omega-3 and fiber for skin health.',
+    imageUrl:
+      'https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=708,643',
+    tags: ['Breakfast', 'Dairy-Free'],
   },
 ];
 
@@ -230,6 +345,39 @@ const HairAnalysisCompleteScreen = () => {
             backgroundImage={require('@/assets/images/prognostic_timeline_bg_hair.jpg')}
             title="Hair Prognostic Timeline"
             showIcon={true}
+          />
+
+          {/* Key Nutrients for Your Skin - Using static data like the others */}
+          <KeyNutrientsSection
+            nutrients={NUTRIENTS_DATA}
+            title="Key Nutrients for Your Skin"
+            showIcon={true}
+          />
+
+          {/* Food Recommendations */}
+          <FoodRecommendationSection
+            recommendedFoods={RECOMMENDED_FOODS_DATA}
+            title="Your Food Recommendations"
+            showIcon={true}
+          />
+
+          {/* Recipes Skin */}
+          <RecipesSection
+            recommendedRecipes={RECOMMENDED_RECIPES_DATA}
+            title="Recipes for Your Skin"
+            showIcon={true}
+            onRecipePress={(recipe) => {
+              console.log('Recipe pressed:', recipe.title);
+              // Navigate to recipe details
+            }}
+          />
+
+          <HydrationTargetCard
+            goal="2.4L of Water"
+            description="Drinking enough water helps flush inflammatory markers and revitalizes areas detected in your scan."
+            title="Hydration Target"
+            iconSize={20}
+            iconColor="#A68A61"
           />
 
           {/* Button */}

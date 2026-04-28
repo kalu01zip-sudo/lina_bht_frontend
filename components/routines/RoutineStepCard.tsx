@@ -40,8 +40,8 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
 
   const handleViewDetails = () => {
     router.push({
-      // pathname: '/(flow)/routines/step-details',
-      pathname: '/(flow)/lymphatic-massage',
+      pathname: '/(flow)/routines/step-details',
+      // pathname: '/(flow)/lymphatic-massage',
       params: {
         routineType: routineType,
         stepId: stepId,
@@ -125,7 +125,7 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
           className=" mt-4 w-full items-end "
           onPress={handleViewDetails}>
           <Text className="font-outfitSemi text-[14px]" style={{ color: '#2E2117' }}>
-            View Tutorials
+            View Details
           </Text>
         </TouchableOpacity>
       </BorderlessShadowCard>

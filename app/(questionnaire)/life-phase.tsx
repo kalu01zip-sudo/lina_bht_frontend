@@ -231,7 +231,7 @@ export default function LifePhaseScreen() {
                           ],
                         }}>
                         <PrimaryButton
-                          style={{ marginTop: 30 }}
+                          style={{ marginTop: 0 }}
                           title="Continue"
                           onPress={handleContinue}
                           gradientColors={['#e2d2c1', '#e2d2c1']}
