@@ -71,8 +71,10 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
 // Single base API — all feature slices inject into this
 export const baseApi = createApi({
+  // refetchOnMountOrArgChange: true,  // ✅ applies to all queries
+  // refetchOnFocus: true,
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['User', 'Auth'],
+  tagTypes: ['User', 'Auth', 'CyclePhase', 'Stress'],
   endpoints: () => ({}), // endpoints live in feature files via injectEndpoints
 });
