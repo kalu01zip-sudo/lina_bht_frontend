@@ -1,4 +1,3 @@
-
 // components/routines/AddRoutineBottomSheet.tsx
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import {
@@ -8,27 +7,26 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from 'react-native';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import InputField from '../inputs/Input';
 import MultilineInputField from '@/components/inputs/MultilineInputField';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
-import { DangerIcon } from '@/components/icons';
+import { useManualRoutineMutation } from '@/store/api/routineApi';
+import { useToast } from '@/hooks/useToast';
 
 interface AddRoutineBottomSheetProps {
   visible: boolean;
   onClose: () => void;
-  onAdd: (data: { productName: string; instructions: string; routineType: string }) => void;
+  onAdd: (data: {
+    productName: string;
+    instructions: string;
+    routineType: string;
+    routineStepId: string;
+  }) => void;
   initialRoutineType?: 'morning' | 'night' | 'weekly';
   isPremium?: boolean;
-}
-
-interface ValidationResult {
-  isSafe: boolean;
-  warnings: string[];
-  severity: 'low' | 'medium' | 'high';
 }
 
 export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
@@ -45,11 +43,12 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
     initialRoutineType
   );
   const [errors, setErrors] = useState({ productName: false });
-  const [isValidating, setIsValidating] = useState(false);
-  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-  const [showValidation, setShowValidation] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   const snapPoints = ['50%', '75%', '90%'];
+
+  // Use the RTK Query mutation - this will use the same base URL as getAllRoutines
+  const [manualRoutine, { isLoading: isAdding }] = useManualRoutineMutation();
 
   useEffect(() => {
     if (visible) {
@@ -58,12 +57,18 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
     }
   }, [visible, initialRoutineType]);
 
+  useEffect(() => {
+    if (visible) {
+      bottomSheetRef.current?.expand();
+    } else {
+      bottomSheetRef.current?.close();
+    }
+  }, [visible]);
+
   const resetForm = () => {
     setProductName('');
     setInstructions('');
     setErrors({ productName: false });
-    setValidationResult(null);
-    setShowValidation(false);
   };
 
   const handleSheetChanges = useCallback(
@@ -89,104 +94,55 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
     []
   );
 
-  // Simulate AI validation API call
-  const validateProduct = async (productName: string): Promise<ValidationResult> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Mock validation results based on product name
-    const productLower = productName.toLowerCase();
-
-    if (productLower.includes('retinol') || productLower.includes('tretinoin')) {
-      return {
-        isSafe: false,
-        warnings: [
-          'May cause irritation for sensitive skin',
-          'Should not be used with other actives',
-          'Requires sunscreen use during the day',
-        ],
-        severity: 'high',
-      };
-    } else if (
-      productLower.includes('acid') ||
-      productLower.includes('aha') ||
-      productLower.includes('bha')
-    ) {
-      return {
-        isSafe: true,
-        warnings: [
-          'Start with 1-2 times per week',
-          'May cause mild tingling sensation',
-          'Use sunscreen when using this product',
-        ],
-        severity: 'medium',
-      };
-    } else if (productLower.includes('vitamin c')) {
-      return {
-        isSafe: true,
-        warnings: [
-          'Store in a cool, dark place',
-          'Can be used with sunscreen for better protection',
-        ],
-        severity: 'low',
-      };
-    }
-
-    return {
-      isSafe: true,
-      warnings: [],
-      severity: 'low',
-    };
-  };
-
-  const handleValidateAndAdd = async () => {
+  const handleAdd = async () => {
     if (!productName.trim()) {
       setErrors({ productName: true });
       return;
     }
 
-    if (isPremium) {
-      // Premium users: AI validation
-      setIsValidating(true);
-      setShowValidation(true);
+    console.log('🟢 Add button pressed!');
+    console.log('Product:', productName);
+    console.log('Instructions:', instructions);
+    console.log('Routine:', selectedRoutine);
 
-      try {
-        const result = await validateProduct(productName);
-        setValidationResult(result);
+    try {
+      const payload = {
+        product_name: productName.trim(),
+        instruction: instructions.trim() || 'Apply as needed',
+        time: selectedRoutine,
+      };
 
-        if (!result.isSafe) {
-          // Don't add, show warnings
-          return;
-        }
-      } catch (error) {
-        console.error('Validation error:', error);
-      } finally {
-        setIsValidating(false);
+      console.log('📤 Sending payload:', JSON.stringify(payload, null, 2));
+
+      const result = await manualRoutine(payload).unwrap();
+
+      console.log('✅ Response received:', JSON.stringify(result, null, 2));
+
+      if (result.saved) {
+        onAdd({
+          productName: productName.trim(),
+          instructions: instructions.trim(),
+          routineType: selectedRoutine,
+          routineStepId: result.routine_step_id,
+        });
+
+        showSuccess(`"${productName.trim()}" added to your ${selectedRoutine} routine`);
+        resetForm();
+        bottomSheetRef.current?.close();
+      } else {
+        showError('Failed to add routine step');
       }
+    } catch (err: any) {
+      console.error('❌ Error adding routine:', err);
+      console.error('Error details:', JSON.stringify(err, null, 2));
+      showError(
+        err?.data?.message || err?.message || 'Could not add routine step. Please try again.'
+      );
     }
-
-    // Non-premium users or safe premium products: add directly
-    addToRoutine();
-  };
-
-  const addToRoutine = () => {
-    onAdd({
-      productName: productName.trim(),
-      instructions: instructions.trim(),
-      routineType: selectedRoutine,
-    });
-
-    resetForm();
-    bottomSheetRef.current?.close();
   };
 
   const getButtonTitle = () => {
-    if (isPremium && showValidation && !isValidating && validationResult?.isSafe === false) {
-      return 'Product May Be Unsafe';
-    }
-    if (isPremium && isValidating) {
-      return 'Validating...';
-    }
+    if (isAdding) return 'Adding...';
     switch (selectedRoutine) {
       case 'morning':
         return 'Add to Morning Routine';
@@ -198,27 +154,6 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
         return 'Add to Routine';
     }
   };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'high':
-        return '#DC2626';
-      case 'medium':
-        return '#F59E0B';
-      case 'low':
-        return '#FBBF24';
-      default:
-        return '#EF4444';
-    }
-  };
-
-  useEffect(() => {
-    if (visible) {
-      bottomSheetRef.current?.expand();
-    } else {
-      bottomSheetRef.current?.close();
-    }
-  }, [visible]);
 
   return (
     <BottomSheet
@@ -268,8 +203,6 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
                   handler={(_, value) => {
                     setProductName(value);
                     if (value.trim()) setErrors({ productName: false });
-                    setValidationResult(null);
-                    setShowValidation(false);
                   }}
                   placeHolder="e.g. Vitamin C Serum"
                   error={errors.productName}
@@ -304,54 +237,8 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
                 <View className="mb-4 flex-row items-center gap-2 rounded-lg bg-[#97785720] p-3">
                   <Ionicons name="diamond" size={20} color="#977857" />
                   <Text className="flex-1 font-outfit text-[12px]" style={{ color: '#977857' }}>
-                    Premium feature: AI will validate product safety for your skin
+                    Add custom products to your routine
                   </Text>
-                </View>
-              )}
-
-              {/* Validation Results */}
-              {showValidation && validationResult && (
-                <View
-                  className={`mb-4 rounded-xl p-4 ${
-                    validationResult.isSafe ? 'bg-green-50' : 'bg-red-50'
-                  }`}>
-                  <View className="mb-2 flex-row items-center gap-2">
-                    {!validationResult.isSafe && <DangerIcon size={20} color="#DC2626" />}
-                    <Text
-                      className={`font-outfitBold flex-1 text-[14px] ${
-                        validationResult.isSafe ? 'text-green-700' : 'text-red-700'
-                      }`}>
-                      {validationResult.isSafe ? 'Safety Check Passed' : 'Safety Concerns Detected'}
-                    </Text>
-                  </View>
-
-                  {validationResult.warnings.map((warning, index) => (
-                    <View key={index} className="mt-2 flex-row items-start gap-2">
-                      <Ionicons
-                        name="warning-outline"
-                        size={16}
-                        color={validationResult.isSafe ? '#F59E0B' : '#DC2626'}
-                      />
-                      <Text
-                        className={`flex-1 font-outfit text-[12px] ${
-                          validationResult.isSafe ? 'text-yellow-700' : 'text-red-600'
-                        }`}>
-                        {warning}
-                      </Text>
-                    </View>
-                  ))}
-
-                  {!validationResult.isSafe && (
-                    <TouchableOpacity
-                      onPress={addToRoutine}
-                      className="mt-3 rounded-lg bg-red-100 py-2">
-                      <Text
-                        className="text-center font-outfitMedium text-[12px]"
-                        style={{ color: '#DC2626' }}>
-                        Add Anyway (Not Recommended)
-                      </Text>
-                    </TouchableOpacity>
-                  )}
                 </View>
               )}
 
@@ -420,9 +307,9 @@ export const AddRoutineBottomSheet: React.FC<AddRoutineBottomSheetProps> = ({
               {/* Add Button */}
               <PrimaryButton
                 title={getButtonTitle()}
-                onPress={handleValidateAndAdd}
-                disabled={isValidating}
-                isLoading={isValidating}
+                onPress={handleAdd}
+                disabled={isAdding}
+                isLoading={isAdding}
                 style={{ marginTop: 8 }}
               />
             </ScrollView>

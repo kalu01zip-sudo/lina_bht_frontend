@@ -13,11 +13,15 @@
 // interface AnalysingResultScoreCardProps {
 //   title?: string;
 //   stats: SkinStat[];
+//   averageScore?: number; // New prop - overall average score from backend
+//   overallScore?: number;
 // }
 
 // export default function AnalysingResultScoreCard({
 //   title = 'Face Scan Result',
 //   stats,
+//   averageScore, // Backend-provided average score
+//   overallScore,
 // }: AnalysingResultScoreCardProps) {
 //   // Convert stats to metrics format for the circular progress
 //   const metrics: SkinMetric[] = stats.map((stat, index) => ({
@@ -25,6 +29,13 @@
 //     value: parseInt(stat.value, 10),
 //     color: stat.color,
 //   }));
+
+//   // Use overallScore from props, or fallback to calculated average
+//   const centerScore =
+//     overallScore ??
+//     (metrics.length > 0
+//       ? Math.round(metrics.reduce((acc, val) => acc + val.value, 0) / metrics.length)
+//       : 0);
 
 //   return (
 //     <BorderlessShadowCard
@@ -36,7 +47,7 @@
 //         paddingVertical: 30,
 //         paddingHorizontal: 24,
 //         alignItems: 'center',
-//         marginBottom: 24,
+//         marginBottom: 0,
 //         borderWidth: 1,
 //         borderColor: '#FFFFFF99',
 //       }}>
@@ -47,6 +58,7 @@
 //         size={300}
 //         circleGap={24}
 //         centerCircleRadius={52}
+//         centerScore={centerScore}
 //       />
 
 //       {/* Stats list */}
@@ -80,20 +92,30 @@ interface SkinStat {
 interface AnalysingResultScoreCardProps {
   title?: string;
   stats: SkinStat[];
-  averageScore?: number; // New prop - overall average score from backend
+  averageScore?: number;
+  overallScore?: number;
 }
 
 export default function AnalysingResultScoreCard({
   title = 'Face Scan Result',
   stats,
-  averageScore, // Backend-provided average score
+  averageScore,
+  overallScore,
 }: AnalysingResultScoreCardProps) {
-  // Convert stats to metrics format for the circular progress
-  const metrics: SkinMetric[] = stats.map((stat, index) => ({
+  const metrics: SkinMetric[] = stats.map((stat) => ({
     label: stat.label,
     value: parseInt(stat.value, 10),
     color: stat.color,
   }));
+
+  // Use overallScore when it is explicitly provided (including 0),
+  // otherwise fall back to the average of the score profile values.
+  const centerScore =
+    overallScore !== undefined
+      ? overallScore
+      : metrics.length > 0
+        ? Math.round(metrics.reduce((acc, m) => acc + m.value, 0) / metrics.length)
+        : 0;
 
   return (
     <BorderlessShadowCard
@@ -116,6 +138,7 @@ export default function AnalysingResultScoreCard({
         size={300}
         circleGap={24}
         centerCircleRadius={52}
+        centerScore={centerScore}
       />
 
       {/* Stats list */}

@@ -41,11 +41,11 @@ export const RoutineTabButton: React.FC<RoutineTabButtonProps> = ({
 
 // New component for the tab bar with horizontal scrolling
 interface RoutineTabBarProps {
-  tabs: Array<{
+  tabs: {
     id: RoutineType;
     label: string;
     icon: React.ReactNode;
-  }>;
+  }[];
   activeTab: RoutineType;
   onTabPress: (tabId: RoutineType) => void;
 }
