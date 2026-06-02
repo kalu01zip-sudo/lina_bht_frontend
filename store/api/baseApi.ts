@@ -75,6 +75,16 @@ export const baseApi = createApi({
   // refetchOnFocus: true,
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['User', 'Auth', 'CyclePhase', 'Stress', 'Scan', 'Routine', 'progressApi'],
+  tagTypes: [
+    'User',
+    'Auth',
+    'CyclePhase',
+    'Stress',
+    'Scan',
+    'Routine',
+    'progressApi',
+    'notificationApi',
+    'Subscription',
+  ],
   endpoints: () => ({}), // endpoints live in feature files via injectEndpoints
 });

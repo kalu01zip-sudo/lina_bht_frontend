@@ -124,7 +124,8 @@ const AskingUpgradeToPremiumScreen = () => {
   }, []);
 
   const handleRetry = () => {
-    router.replace('/(flow)/face-scan/analysis-compatibility-check');
+    // router.replace('/(flow)/face-scan/analysis-compatibility-check');
+    router.replace('/(flow)/profile/asking-upgrage-to-premium-screen');
   };
 
   // Show initial render loading (useScreenReady)

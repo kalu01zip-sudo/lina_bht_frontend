@@ -20,8 +20,11 @@ import { useSignUpMutation } from '@/store/api/authApi';
 import { extractApiError } from '@/utils/apiError';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 import { useAppleAuth } from '@/hooks/useAppleAuth';
+import { useOneSignalId } from '@/hooks/useOneSignalId';
 
 export default function SignUpScreen() {
+  const onesignalId = useOneSignalId();
+
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const router = useRouter();
   const { showSuccess, showError, showInfo } = useToast();
@@ -64,6 +67,7 @@ export default function SignUpScreen() {
         full_name: formData.name,
         email: formData.email,
         password: formData.password,
+        onesignal_id: onesignalId, // ← add this
       }).unwrap();
 
       showSuccess('Account created! Check your email for the verification code.');

@@ -24,26 +24,18 @@ import ErrorScreen from '@/components/errors/ErrorScreen';
 import { useAuth } from '@/hooks/useAuth';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { useGetProfileQuery, useGetProfileTabQuery } from '@/store/api/profileApi';
-
-// Inside profile.tsx, above the Profile component:
-// const AvatarFromApi = () => {
-//   const { data } = useGetProfileQuery(); // already cached, no extra network call
-//   return (
-//     <Avatar
-//       source={data?.avatar_url ?? undefined}
-//       size={50}
-//       fallbackIcon="person-circle"
-//       iconColor="#361A0D"
-//       backgroundColor="#E5E0D8"
-//     />
-//   );
-// };
+import { useRevenueCat } from '@/hooks/useRevenueCat';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '@/store/slices/authSlice';
 
 const Profile = () => {
   const router = useRouter();
   const { logout } = useAuth();
   const { showSuccess, showError } = useToast();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const currentUser = useSelector(selectCurrentUser);
+  const { isPremium } = useRevenueCat(currentUser?.id);
 
   // ✅ Single source of truth for this screen
   // const { data: profile, isLoading: profileLoading } = useGetProfileTabQuery();
@@ -146,11 +138,12 @@ const Profile = () => {
             opacity: isContentReady ? 1 : 0,
             transform: [{ translateY: isContentReady ? 0 : 10 }],
           }}>
-          {/* Profile Header Card */}
+          {/* Profile Header Card */}`
           <BorderlessShadowCard
             style={{ paddingVertical: 24, paddingHorizontal: 24, alignItems: 'center' }}>
             <PillowBadge
-              title={profile?.plan ? capitalize(profile.plan) + ' Plan' : 'Free Plan'}
+              // title={profile?.plan ? capitalize(profile.plan) + ' Plan' : 'Free Plan'}
+              title={isPremium ? 'Premium Plan' : 'Free Plan'}
               style={{ maxWidth: 120, flex: 1, alignSelf: 'flex-end', marginBottom: 5 }}
             />
             <View className="w-full flex-row items-center gap-3">
@@ -177,9 +170,7 @@ const Profile = () => {
               </View>
             </View>
           </BorderlessShadowCard>
-
           {/* ... rest of your JSX unchanged, just replace user?.X with profile?.onboarding.X ... */}
-
           {/* Skin & Hair Profile Card */}
           <BorderlessShadowCard
             b_tl={0}
@@ -208,7 +199,6 @@ const Profile = () => {
               </View>
             ))}
           </BorderlessShadowCard>
-
           {/* Premium Upgrade Card */}
           {profile?.plan === 'free' && (
             <BorderlessShadowCard
@@ -232,7 +222,6 @@ const Profile = () => {
               />
             </BorderlessShadowCard>
           )}
-
           {/* Features Section */}
           <View className="mt-3">
             <Text className="font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
@@ -278,7 +267,6 @@ const Profile = () => {
               </View>
             </BorderlessShadowCard>
           </View>
-
           {/* Account Section */}
           <View>
             <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
@@ -302,7 +290,6 @@ const Profile = () => {
               </View>
             </BorderlessShadowCard>
           </View>
-
           {/* Legal & Support Section */}
           <View>
             <Text className="mt-3 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
@@ -344,7 +331,6 @@ const Profile = () => {
               </View>
             </BorderlessShadowCard>
           </View>
-
           {/* Log Out Button - Updated with modal trigger */}
           <TouchableOpacity
             onPress={handleLogoutPress}
