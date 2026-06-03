@@ -8,9 +8,10 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearCredentials, setCredentials } from '../slices/authSlice';
-
+// console.log('BASE URL:', process.env.EXPO_PUBLIC_API_BASE_URL);
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
+
   prepareHeaders: async (headers) => {
     const token = await AsyncStorage.getItem('access_token');
     if (token) {
@@ -85,6 +86,7 @@ export const baseApi = createApi({
     'progressApi',
     'notificationApi',
     'Subscription',
+    'articleApi',
   ],
   endpoints: () => ({}), // endpoints live in feature files via injectEndpoints
 });

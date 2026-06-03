@@ -346,7 +346,6 @@ const Profile = () => {
         </View>
       </ScrollView>
 
-      {/* ✅ Logout Confirmation Modal */}
       <ConfirmationModal
         visible={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}

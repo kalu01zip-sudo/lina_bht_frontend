@@ -1,4 +1,4 @@
-import { ImageSourcePropType, ScrollView, Text, View } from 'react-native';
+import { ImageSourcePropType, ScrollView, View } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -21,6 +21,7 @@ import { HydrationTargetCard } from '@/components/scans/HydrationTargetCard';
 import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
 import { useGetFaceScanByIdQuery } from '@/store/api/progressApi';
+import { normaliseNutrition, normaliseFood, normaliseRecipe } from '@/store/api/scanApi';
 
 // ── Severity helpers ──────────────────────────────────────────────────────────
 const normaliseSeverity = (raw: string): 'Low' | 'Medium' | 'High' => {
@@ -69,6 +70,9 @@ const STAT_COLORS: Record<string, string> = {
   redness: '#F87171',
   texture: '#FBBF24',
   evenness: '#A78BFA',
+  dark_circles: '#FB7185',
+  fine_lines: '#A78BFA',
+  radiance: '#4ADE80',
 };
 
 const FALLBACK_IMAGE = require('@/assets/images/hair_scalp_analysis_sample_image.jpg');
@@ -91,7 +95,7 @@ const FaceScanDetailScreen = () => {
     ? { uri: data.images[0] }
     : FALLBACK_IMAGE;
 
-  // ── Derived data ──────────────────────────────────────────────────────────
+  // ── Score card stats ──────────────────────────────────────────────────────
   const skinStats = data
     ? Object.entries(data.analysis.checked_area).map(([key, value]) => ({
         label: key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -100,6 +104,7 @@ const FaceScanDetailScreen = () => {
       }))
     : [];
 
+  // ── Detected conditions ───────────────────────────────────────────────────
   const detectedConditions: DetectedCondition[] = (data?.analysis.detected_condition ?? []).map(
     (c) => ({
       id: c.name,
@@ -112,6 +117,7 @@ const FaceScanDetailScreen = () => {
     })
   );
 
+  // ── Lifestyle factors ─────────────────────────────────────────────────────
   const lifestyleFactors: LifestyleFactor[] = data
     ? [
         {
@@ -135,6 +141,7 @@ const FaceScanDetailScreen = () => {
       ]
     : [];
 
+  // ── Prognosis timeline ────────────────────────────────────────────────────
   const prognosticDays: TimelineDay[] = data
     ? [
         {
@@ -177,27 +184,39 @@ const FaceScanDetailScreen = () => {
       ]
     : [];
 
-  const nutrients: Nutrient[] = (data?.nutritions ?? []).map((n) => ({
-    id: n.id,
-    name: n.name,
-    description: n.benefit,
-    imageUrl: { uri: n.icon_url },
-  }));
+  // ── Nutrients ─────────────────────────────────────────────────────────────
+  const nutrients: Nutrient[] = (data?.nutritions ?? []).map((n) => {
+    const norm = normaliseNutrition(n);
+    return {
+      id: norm.id,
+      name: norm.name,
+      description: norm.description,
+      imageUrl: { uri: norm.imageUrl },
+    };
+  });
 
-  const recommendedFoods: RecommendedFood[] = (data?.foods ?? []).map((f) => ({
-    id: f.id,
-    name: f.name,
-    description: f.tags.join(', '),
-    imageUrl: f.icon_url,
-  }));
+  // ── Foods ─────────────────────────────────────────────────────────────────
+  const recommendedFoods: RecommendedFood[] = (data?.foods ?? []).map((f) => {
+    const norm = normaliseFood(f);
+    return {
+      id: norm.id,
+      name: norm.name,
+      description: norm.description,
+      imageUrl: norm.imageUrl,
+    };
+  });
 
-  const recommendedRecipes: RecommendedRecipe[] = (data?.recipes ?? []).map((r) => ({
-    id: r.id,
-    title: r.name,
-    description: r.description,
-    imageUrl: r.image_url,
-    tags: [r.meal_type.charAt(0).toUpperCase() + r.meal_type.slice(1), ...r.tags],
-  }));
+  // ── Recipes ───────────────────────────────────────────────────────────────
+  const recommendedRecipes: RecommendedRecipe[] = (data?.recipes ?? []).map((r) => {
+    const norm = normaliseRecipe(r);
+    return {
+      id: norm.id,
+      title: norm.title,
+      description: norm.description,
+      imageUrl: norm.imageUrl,
+      tags: norm.tags,
+    };
+  });
 
   // ── Guards ────────────────────────────────────────────────────────────────
   if (isLoading) {
@@ -248,7 +267,6 @@ const FaceScanDetailScreen = () => {
 
           <View className="mt-6" />
 
-          {/* Skin Analysis Summary Cards */}
           <SkinAnalysisCards
             imageUri={data.images?.[0]}
             hydrationLevel={data.analysis.hydration}

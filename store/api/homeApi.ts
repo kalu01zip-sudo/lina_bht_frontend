@@ -14,10 +14,10 @@ export interface HomeScanAnalysis {
 
 // store/api/homeApi.ts
 export interface HomeRoutineItem {
-  id: string; // Add this
+  id: string;
   time: 'morning' | 'night' | 'weekly';
   product_name: string | null;
-  product_category?: string; // Add this
+  product_category?: string;
 }
 
 export interface HomeScansResponse {

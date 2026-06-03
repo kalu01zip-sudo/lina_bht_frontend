@@ -1,67 +1,203 @@
-// hooks/useArticles.ts
-import { useState, useEffect } from 'react';
+// // hooks/useArticles.ts
+// import { useState, useCallback, useMemo, useRef } from 'react';
+// import { useRouter } from 'expo-router';
+// import { Article, Category } from '@/types/article';
+// import { useGetArticlesQuery, useGetArticleCategoriesQuery } from '@/store/api/articleApi';
+// import { useDebounce } from '@/hooks/useDebounce';
+
+// const PAGE_SIZE = 10;
+
+// export const useArticles = () => {
+//   const router = useRouter();
+//   const [searchQuery, setSearchQuery] = useState('');
+//   const [selectedCategory, setSelectedCategory] = useState('All');
+//   const [offset, setOffset] = useState(0);
+//   const loadingMoreRef = useRef(false); // guard against double-fire
+
+//   const debouncedSearch = useDebounce(searchQuery, 400);
+
+//   const { data: rawCategories = [], isLoading: categoriesLoading } = useGetArticleCategoriesQuery();
+
+//   const categories: Category[] = useMemo(
+//     () => [
+//       { id: 'all', name: 'All' },
+//       ...rawCategories.map((name, i) => ({ id: String(i + 1), name })),
+//     ],
+//     [rawCategories]
+//   );
+
+//   const {
+//     data,
+//     isLoading: articlesLoading,
+//     isFetching,
+//     isError,
+//     refetch,
+//   } = useGetArticlesQuery(
+//     { limit: PAGE_SIZE, offset, search: debouncedSearch || undefined },
+//     { refetchOnMountOrArgChange: true }
+//   );
+
+//   // Reset loadingMoreRef when fetch completes
+//   if (!isFetching) {
+//     loadingMoreRef.current = false;
+//   }
+
+//   const allArticles = data?.articles ?? [];
+//   const total = data?.total ?? 0;
+//   const hasMore = allArticles.length < total;
+
+//   const articles: Article[] = useMemo(() => {
+//     if (selectedCategory === 'All') return allArticles;
+//     return allArticles.filter((a) => a.category === selectedCategory);
+//   }, [allArticles, selectedCategory]);
+
+//   const handleSearch = useCallback((query: string) => {
+//     setSearchQuery(query);
+//     setOffset(0);
+//   }, []);
+
+//   const handleCategorySelect = useCallback((categoryName: string) => {
+//     setSelectedCategory(categoryName);
+//   }, []);
+
+//   const handleLoadMore = useCallback(() => {
+//     if (loadingMoreRef.current || isFetching || !hasMore) return;
+//     loadingMoreRef.current = true;
+//     setOffset((prev) => prev + PAGE_SIZE);
+//   }, [isFetching, hasMore]);
+
+//   const handleRefresh = useCallback(() => {
+//     setOffset(0);
+//     setSearchQuery('');
+//     refetch();
+//   }, [refetch]);
+
+//   const handleArticlePress = useCallback(
+//     (article: Article) => {
+//       router.push({
+//         pathname: '/(flow)/learn-article/[id]',
+//         params: { id: article.id },
+//       });
+//     },
+//     [router]
+//   );
+
+//   return {
+//     articles,
+//     categories,
+//     selectedCategory,
+//     searchQuery,
+//     isLoading: articlesLoading || categoriesLoading,
+//     isFetching,
+//     isError,
+//     hasMore,
+//     refetch: handleRefresh,
+//     handleSearch,
+//     handleCategorySelect,
+//     handleLoadMore,
+//     handleArticlePress,
+//   };
+// };
+
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'expo-router';
-import { SAMPLE_ARTICLES, CATEGORIES } from '@/constants/sampleArticles';
 import { Article, Category } from '@/types/article';
+import { useGetArticlesQuery, useGetArticleCategoriesQuery } from '@/store/api/articleApi';
+import { useDebounce } from '@/hooks/useDebounce';
+
+const PAGE_SIZE = 10;
 
 export const useArticles = () => {
   const router = useRouter();
-  const [articles, setArticles] = useState<Article[]>(SAMPLE_ARTICLES);
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>(SAMPLE_ARTICLES);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categories] = useState<Category[]>(CATEGORIES);
-  const [isLoading, setIsLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const loadingMoreRef = useRef(false);
 
-  useEffect(() => {
-    filterArticles();
-  }, [searchQuery, selectedCategory]);
+  const debouncedSearch = useDebounce(searchQuery, 400);
 
-  const filterArticles = () => {
-    let filtered = [...articles];
+  const { data: rawCategories = [], isLoading: categoriesLoading } = useGetArticleCategoriesQuery();
 
-    // Filter by category
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter((article) => article.category === selectedCategory);
-    }
+  const categories: Category[] = useMemo(
+    () => [
+      { id: 'all', name: 'All' },
+      ...rawCategories.map((name, i) => ({ id: String(i + 1), name })),
+    ],
+    [rawCategories]
+  );
 
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (article) =>
-          article.title.toLowerCase().includes(query) ||
-          article.description.toLowerCase().includes(query)
-      );
-    }
+  const {
+    data,
+    isLoading: articlesLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetArticlesQuery(
+    { limit: PAGE_SIZE, offset, search: debouncedSearch || undefined },
+    { refetchOnMountOrArgChange: true }
+  );
 
-    setFilteredArticles(filtered);
-  };
+  // Unlock load-more guard once fetch settles
+  if (!isFetching) {
+    loadingMoreRef.current = false;
+  }
 
-  const handleSearch = (query: string) => {
+  const allArticles = data?.articles ?? [];
+  const total = data?.total ?? 0;
+
+  // hasMore: true only when there are more items on the server than we have loaded
+  const hasMore = total > allArticles.length;
+
+  // Client-side category filter (server handles search, we handle category)
+  const articles: Article[] = useMemo(() => {
+    if (selectedCategory === 'All') return allArticles;
+    return allArticles.filter((a) => a.category === selectedCategory);
+  }, [allArticles, selectedCategory]);
+
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  };
+    setOffset(0); // reset to first page on new search
+  }, []);
 
-  const handleCategorySelect = (categoryName: string) => {
+  const handleCategorySelect = useCallback((categoryName: string) => {
     setSelectedCategory(categoryName);
-  };
+  }, []);
 
-  const handleArticlePress = (article: Article) => {
-    // Navigate to article detail with the article ID
-    router.push({
-      pathname: '/(flow)/learn-article/[id]',
-      params: { id: article.id },
-    });
-  };
+  const handleLoadMore = useCallback(() => {
+    // Guard: don't fire if already loading, no more pages, or locked by ref
+    if (loadingMoreRef.current || isFetching || !hasMore) return;
+    loadingMoreRef.current = true;
+    setOffset((prev) => prev + PAGE_SIZE);
+  }, [isFetching, hasMore]);
+
+  const handleRefresh = useCallback(() => {
+    setOffset(0);
+    refetch();
+  }, [refetch]);
+
+  const handleArticlePress = useCallback(
+    (article: Article) => {
+      router.push({
+        pathname: '/(flow)/learn-article/[id]',
+        params: { id: article.id },
+      });
+    },
+    [router]
+  );
 
   return {
-    articles: filteredArticles,
+    articles,
     categories,
     selectedCategory,
     searchQuery,
-    isLoading,
+    isLoading: articlesLoading || categoriesLoading,
+    isFetching,
+    isError,
+    hasMore,
+    refetch: handleRefresh,
     handleSearch,
     handleCategorySelect,
+    handleLoadMore,
     handleArticlePress,
   };
 };

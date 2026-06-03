@@ -77,7 +77,60 @@
 //   barcodeType?: string;
 // }
 
-// // ----- hair scan ----------
+// // ── Hair scan types ───────────────────────────────────────────────────────────
+
+// // export interface HairScanResponse {
+// //   scan_id: string;
+// //   analysis: {
+// //     overall_score: number;
+// //     checked_area: Record<string, number>;
+// //     visible_area: {
+// //       condition: string;
+// //       areas: string[];
+// //       score: number;
+// //     };
+// //     scalp_health: number;
+// //     detected_condition: {
+// //       name: string;
+// //       note: string;
+// //       severity: string;
+// //     }[];
+// //     lifestyle_factor: {
+// //       stress_impact: number;
+// //       hygiene_score: number;
+// //       dietary_factor: number;
+// //     };
+// //     prognosis_timeline: {
+// //       seven_days: Record<string, number>;
+// //       fourteen_days: Record<string, number>;
+// //     };
+// //   };
+// //   nutritions: {
+// //     id: string;
+// //     name: string;
+// //     icon_url: string;
+// //     benefit: string;
+// //     tags: string[];
+// //     priority: number;
+// //   }[];
+// //   foods: {
+// //     id: string;
+// //     name: string;
+// //     icon_url: string;
+// //     tags: string[];
+// //     score: number;
+// //   }[];
+// //   recipes: {
+// //     id: string;
+// //     name: string;
+// //     image_url: string;
+// //     description: string;
+// //     meal_type: string;
+// //     tags: string[];
+// //     score: number;
+// //   }[];
+// // }
+
 // export interface HairScanResponse {
 //   scan_id: string;
 //   analysis: {
@@ -107,6 +160,80 @@
 //   nutritions: {
 //     id: string;
 //     name: string;
+//     icon_url?: string; // old field
+//     'image url'?: string; // ← actual field from API
+//     benefit?: string; // old field
+//     'how to improves'?: string; // ← actual field from API
+//     tags?: string[];
+//     priority?: number;
+//   }[];
+//   foods: {
+//     id: string;
+//     name: string;
+//     icon_url: string;
+//     tags: string[];
+//     score: number;
+//   }[];
+//   recipes: {
+//     id: string;
+//     name: string;
+//     image_url: string;
+//     description: string;
+//     meal_type?: string; // ← make optional since it can be missing
+//     tags: string[];
+//     score: number;
+//   }[];
+// }
+
+// export interface HairScanArg {
+//   imageUri: string;
+// }
+
+// // ── Face scan types ───────────────────────────────────────────────────────────
+
+// export interface FaceScanImageError {
+//   image: number; // 1-based index of the failing image
+//   filename: string;
+//   error: 'no_face' | 'face_too_small' | string;
+// }
+
+// export interface FaceScanErrorDetail {
+//   code: 'INVALID_FACE_IMAGES' | string;
+//   message: string;
+//   valid_count: number;
+//   errors: FaceScanImageError[];
+// }
+
+// export interface FaceScanResponse {
+//   scan_id: string;
+//   analysis: {
+//     overall_score: number;
+//     checked_area: Record<string, number>;
+//     visible_area: {
+//       condition: string;
+//       areas: string[];
+//       score: number;
+//     };
+//     hydration: number;
+//     detected_condition: {
+//       name: string;
+//       note: string;
+//       severity: string;
+//     }[];
+//     lifestyle_factor: {
+//       stress_score: number;
+//       water_intake: number;
+//       sleep_quality: number;
+//     };
+//     prognosis_timeline: {
+//       seven_days: Record<string, number>;
+//       fourteen_days: Record<string, number>;
+//     };
+//     hydration_target: number;
+//   };
+//   nutritions: {
+//     id: string;
+//     name: string;
 //     icon_url: string;
 //     benefit: string;
 //     tags: string[];
@@ -130,8 +257,8 @@
 //   }[];
 // }
 
-// export interface HairScanArg {
-//   imageUri: string;
+// export interface FaceScanArg {
+//   imageUris: string[]; // exactly 5 image URIs (one per angle)
 // }
 
 // /**
@@ -142,14 +269,12 @@
 // const normalizeScanResult = (raw: any): ProductScanResult => {
 //   const analysis = raw.analysis ?? {};
 
-//   // If product_benefits is missing from analysis but exists at root, lift it in
 //   const productBenefits = analysis.product_benefits ??
 //     raw.product_benefits ?? {
 //       high_compatibility: { score: 0, intensity: 'low', why: '' },
 //       ingredient_synergy: { score: 0, intensity: 'low', why: '' },
 //     };
 
-//   // Same safety net for what_to_stop / what_to_do in case they drift too
 //   const whatToStop = analysis.what_to_stop ?? raw.what_to_stop ?? [];
 //   const whatToDo = analysis.what_to_do ?? raw.what_to_do ?? [];
 //   const learnMore = analysis.learn_more ?? raw.learn_more ?? '';
@@ -173,8 +298,6 @@
 //     /**
 //      * POST /scan/product
 //      * Multipart form-data with a single `image` field.
-//      * formData: true tells fetchBaseQuery to skip setting Content-Type so the
-//      * runtime sets the correct multipart boundary automatically.
 //      */
 //     scanProductByImage: builder.mutation<ProductScanResult, ScanProductByImageArg>({
 //       query: ({ imageUri }) => {
@@ -186,13 +309,11 @@
 //         } as any);
 //         return { url: '/scan/product', method: 'POST', body, formData: true };
 //       },
-//       // Normalize before the result reaches any component
 //       transformResponse: (raw: any) => normalizeScanResult(raw),
 //     }),
 
 //     /**
-//      * POST /scan/product/barcode  — backend endpoint not live yet.
-//      * When it ships, nothing in the loading screen needs to change.
+//      * POST /scan/product/barcode
 //      */
 //     scanProductByBarcode: builder.mutation<ProductScanResult, ScanProductByBarcodeArg>({
 //       query: ({ barcode, barcodeType }) => ({
@@ -203,7 +324,10 @@
 //       transformResponse: (raw: any) => normalizeScanResult(raw),
 //     }),
 
-//     // hair scan endpoint
+//     /**
+//      * POST /scan/scalp_hair
+//      * Multipart form-data with a single `file` field.
+//      */
 //     scanHairScalp: builder.mutation<HairScanResponse, HairScanArg>({
 //       query: ({ imageUri }) => {
 //         const formData = new FormData();
@@ -220,6 +344,32 @@
 //         };
 //       },
 //     }),
+
+//     /**
+//      * POST /scan/face
+//      * Multipart form-data with exactly 5 `images` fields (one per angle).
+//      * Error shapes:
+//      *   - Plain string: "Exactly 5 images required"
+//      *   - Structured:   { code: "INVALID_FACE_IMAGES", message, valid_count, errors[] }
+//      */
+//     scanFace: builder.mutation<FaceScanResponse, FaceScanArg>({
+//       query: ({ imageUris }) => {
+//         const formData = new FormData();
+//         imageUris.forEach((uri, idx) => {
+//           formData.append('images', {
+//             uri,
+//             type: 'image/jpeg',
+//             name: `face_${idx + 1}.jpg`,
+//           } as any);
+//         });
+//         return {
+//           url: '/scan/face',
+//           method: 'POST',
+//           body: formData,
+//           formData: true,
+//         };
+//       },
+//     }),
 //   }),
 //   overrideExisting: false,
 // });
@@ -228,6 +378,7 @@
 //   useScanProductByImageMutation,
 //   useScanProductByBarcodeMutation,
 //   useScanHairScalpMutation,
+//   useScanFaceMutation,
 // } = scanApi;
 
 // store/api/scanApi.ts
@@ -309,6 +460,60 @@ export interface ScanProductByBarcodeArg {
   barcodeType?: string;
 }
 
+// ── Shared nutrition type (actual API shape) ──────────────────────────────────
+// The API returns non-standard field names with spaces:
+//   "image url"       → the image URL
+//   "how to improves" → the benefit description
+//   "main ingredient" → primary ingredient
+// Both hair and face scans share this shape.
+export interface ApiNutrition {
+  _id?: string;
+  id: string;
+  name: string;
+  'main ingredient'?: string;
+  'how to improves'?: string;
+  'image url'?: string;
+  // Legacy / fallback fields (may not be present)
+  icon_url?: string;
+  benefit?: string;
+  tags?: string[];
+  priority?: number;
+  detected_condition?: string[];
+}
+
+// ── Shared food type (actual API shape) ───────────────────────────────────────
+// "benefits" is the human-readable description; "tags" are condition tags.
+export interface ApiFood {
+  _id?: string;
+  id: string;
+  name: string;
+  ingredients?: string[];
+  detected_condition?: string[];
+  benefits?: string; // ← use this for description, not tags.join()
+  icon_url: string;
+  tags: string[];
+  score?: number;
+}
+
+// ── Shared recipe type (actual API shape) ─────────────────────────────────────
+// "tags" arrive as a single-element array with a hashtag string e.g. ["#hydration #glow"]
+// "main_ingredients" replaces the old "ingredients" field.
+// "how_it_improves" replaces the old "description" field.
+export interface ApiRecipe {
+  _id?: string;
+  id: string;
+  name: string;
+  main_ingredients?: string[];
+  detected_condition?: string[];
+  how_it_improves?: string; // ← use as description
+  tags: string[]; // e.g. ["#hydration #glow #vitaminc"]
+  image_url: string;
+  score?: number;
+  // Legacy fields (may be absent)
+  description?: string;
+  meal_type?: string;
+}
+
 // ── Hair scan types ───────────────────────────────────────────────────────────
 
 export interface HairScanResponse {
@@ -337,30 +542,9 @@ export interface HairScanResponse {
       fourteen_days: Record<string, number>;
     };
   };
-  nutritions: {
-    id: string;
-    name: string;
-    icon_url: string;
-    benefit: string;
-    tags: string[];
-    priority: number;
-  }[];
-  foods: {
-    id: string;
-    name: string;
-    icon_url: string;
-    tags: string[];
-    score: number;
-  }[];
-  recipes: {
-    id: string;
-    name: string;
-    image_url: string;
-    description: string;
-    meal_type: string;
-    tags: string[];
-    score: number;
-  }[];
+  nutritions: ApiNutrition[];
+  foods: ApiFood[];
+  recipes: ApiRecipe[];
 }
 
 export interface HairScanArg {
@@ -409,35 +593,61 @@ export interface FaceScanResponse {
     };
     hydration_target: number;
   };
-  nutritions: {
-    id: string;
-    name: string;
-    icon_url: string;
-    benefit: string;
-    tags: string[];
-    priority: number;
-  }[];
-  foods: {
-    id: string;
-    name: string;
-    icon_url: string;
-    tags: string[];
-    score: number;
-  }[];
-  recipes: {
-    id: string;
-    name: string;
-    image_url: string;
-    description: string;
-    meal_type: string;
-    tags: string[];
-    score: number;
-  }[];
+  nutritions: ApiNutrition[];
+  foods: ApiFood[];
+  recipes: ApiRecipe[];
 }
 
 export interface FaceScanArg {
   imageUris: string[]; // exactly 5 image URIs (one per angle)
 }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Normalise a nutrition record into consistent display fields,
+ * regardless of which API shape variant was returned.
+ */
+export const normaliseNutrition = (n: ApiNutrition) => ({
+  id: n.id,
+  name: n.name,
+  description: n['how to improves'] ?? n.benefit ?? '',
+  imageUrl: n['image url'] ?? n.icon_url ?? '',
+});
+
+/**
+ * Normalise a food record into consistent display fields.
+ * Uses "benefits" for the description rather than joining tags.
+ */
+export const normaliseFood = (f: ApiFood) => ({
+  id: f.id,
+  name: f.name,
+  description: f.benefits ?? f.tags.join(', '),
+  imageUrl: f.icon_url,
+});
+
+/**
+ * Normalise a recipe record into consistent display fields.
+ *
+ * The API returns tags as a single-element array containing a
+ * space-separated hashtag string, e.g. ["#hydration #glow #vitaminc"].
+ * This helper splits and cleans them into individual tag labels.
+ */
+export const normaliseRecipe = (r: ApiRecipe) => {
+  // Split "#hydration #glow #vitaminc" → ["Hydration", "Glow", "Vitaminc"]
+  const cleanTags = r.tags
+    .flatMap((t) => t.split(/\s+/))
+    .filter(Boolean)
+    .map((t) => t.replace(/^#/, '').replace(/\b\w/g, (c) => c.toUpperCase()));
+
+  return {
+    id: r.id,
+    title: r.name,
+    description: r.how_it_improves ?? r.description ?? '',
+    imageUrl: r.image_url,
+    tags: cleanTags,
+  };
+};
 
 /**
  * Normalizes the ProductScanResult to handle the backend bug where
