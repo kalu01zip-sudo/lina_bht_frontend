@@ -8,7 +8,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearCredentials, setCredentials } from '../slices/authSlice';
-// console.log('BASE URL:', process.env.EXPO_PUBLIC_API_BASE_URL);
+console.log('BASE URL:', process.env.EXPO_PUBLIC_API_BASE_URL);
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
 

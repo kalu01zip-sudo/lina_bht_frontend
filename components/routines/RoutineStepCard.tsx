@@ -1,10 +1,10 @@
-// components/routines/RoutineStepCard.tsx
-import React, { useState } from 'react';
-import { View, Text, StyleProp, ViewStyle, TouchableOpacity } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleProp, ViewStyle, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { RadioButton } from '@/components/buttons/RadioButton';
-import { Ionicons } from '@expo/vector-icons';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 
 interface RoutineStepCardProps {
@@ -22,7 +22,6 @@ interface RoutineStepCardProps {
   stepId?: string;
   onDelete?: (stepId: string) => void;
   productCategory?: string;
-  /** Disables the toggle while a PATCH request is in-flight */
   disabled?: boolean;
 }
 
@@ -46,26 +45,37 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.985,
+      useNativeDriver: true,
+      friction: 5,
+      tension: 100,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      friction: 5,
+      tension: 100,
+    }).start();
+  };
+
   const handleViewDetails = () => {
     router.push({
       pathname: '/(flow)/routines/step-details',
       params: {
-        routineType: routineType,
-        stepId: stepId,
-        stepNumber: stepNumber,
-        title: title,
-        productCategory: productCategory,
+        routineType,
+        stepId,
+        stepNumber,
+        title,
+        productCategory,
       },
     });
-  };
-
-  const handleDeletePress = () => {
-    setShowDeleteModal(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteModal(false);
-    onDelete?.(stepId || '');
   };
 
   const handleToggle = (value: boolean) => {
@@ -73,70 +83,114 @@ export const RoutineStepCard: React.FC<RoutineStepCardProps> = ({
     onToggle(value);
   };
 
+  const handleConfirmDelete = () => {
+    setShowDeleteModal(false);
+    onDelete?.(stepId || '');
+  };
+
   return (
     <>
-      <View
-        className={className}
-        style={[
-          {
-            marginTop: isFirst ? 0 : 12,
-            opacity: disabled ? 0.6 : 1,
-          },
-          style,
-        ]}>
-        <BorderlessShadowCard
-          b_tl={isFirst ? 24 : 0}
-          b_tr={isFirst ? 24 : 0}
-          b_bl={isLast ? 24 : 0}
-          b_br={isLast ? 24 : 0}
+      <Pressable
+        onPress={handleViewDetails}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={{ marginTop: isFirst ? 0 : 12 }}>
+        <Animated.View
+          className={className}
           style={[
             {
-              paddingVertical: 16,
-              paddingHorizontal: 24,
+              transform: [{ scale: scaleAnim }],
+              opacity: 1,
             },
-            contentContainerStyle,
+            style,
           ]}>
-          <View className="flex-row items-center justify-between">
-            <Text className="font-OutfitBold text-[14px]" style={{ color: '#977857' }}>
-              Step {stepNumber}
-            </Text>
-            <View className="flex-row items-center gap-3">
-              {onDelete && (
-                <TouchableOpacity
-                  onPress={handleDeletePress}
-                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                  <Ionicons name="trash-outline" size={18} color="#EF4444" />
-                </TouchableOpacity>
-              )}
-              <RadioButton value={isCompleted} onValueChange={handleToggle} />
+          <BorderlessShadowCard
+            b_tl={isFirst ? 24 : 0}
+            b_tr={isFirst ? 24 : 0}
+            b_bl={isLast ? 24 : 0}
+            b_br={isLast ? 24 : 0}
+            style={[
+              {
+                paddingVertical: 18,
+                paddingHorizontal: 20,
+              },
+              contentContainerStyle,
+            ]}>
+            {/* Header */}
+            <View className="flex-row items-start justify-between">
+              <View className="flex-1">
+                <Text className="font-OutfitBold text-[13px]" style={{ color: '#977857' }}>
+                  Step {stepNumber}
+                </Text>
+
+                <Text className="mt-1 font-outfit text-[11px]" style={{ color: '#2E211766' }}>
+                  {productCategory || 'Gixy Essentials'}
+                </Text>
+              </View>
+
+              {/* Radio Button */}
+              <Pressable onPress={(e) => e.stopPropagation()}>
+                <RadioButton value={isCompleted} onValueChange={handleToggle} />
+              </Pressable>
             </View>
-          </View>
 
-          <Text className="font-outfit text-[12px]" style={{ color: '#2E211780' }}>
-            {productCategory || 'Gixy Essentials'}
-          </Text>
-
-          <View className="flex-row items-end justify-between">
-            <View className="flex-1">
-              <Text className="mt-1 font-outfitMedium text-[16px]" style={{ color: '#2E2117' }}>
+            {/* Content */}
+            <View className="mt-3">
+              <Text
+                className="font-outfitMedium text-[17px]"
+                style={{ color: '#2E2117' }}
+                numberOfLines={2}>
                 {title}
               </Text>
-              <Text className="mt-[6px] font-outfit text-[14px]" style={{ color: '#2E2117B2' }}>
+
+              <Text
+                className="mt-2 font-outfit text-[13px]"
+                style={{ color: '#2E211799' }}
+                numberOfLines={3}>
                 {description}
               </Text>
             </View>
-          </View>
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            className="mt-4 w-full items-end"
-            onPress={handleViewDetails}>
-            <Text className="font-outfitSemi text-[14px]" style={{ color: '#2E2117' }}>
-              View Details
-            </Text>
-          </TouchableOpacity>
-        </BorderlessShadowCard>
-      </View>
+            {/* Footer */}
+            <View className="mt-5 flex-row items-center justify-between">
+              {/* Delete Button */}
+              <View>
+                {onDelete ? (
+                  <Pressable
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      setShowDeleteModal(true);
+                    }}
+                    hitSlop={10}
+                    className="flex-row items-center">
+                    <Ionicons name="trash-outline" size={16} color="#EF4444" />
+
+                    <Text className="ml-1 font-outfitSemi text-[14px]" style={{ color: '#EF4444' }}>
+                      Remove
+                    </Text>
+                  </Pressable>
+                ) : (
+                  <View />
+                )}
+              </View>
+
+              {/* View Details */}
+              <View className="flex-row items-center">
+                <Text className="font-outfitSemi text-[14px]" style={{ color: '#977857' }}>
+                  View Details
+                </Text>
+
+                <Ionicons
+                  name="chevron-forward"
+                  size={16}
+                  color="#977857"
+                  style={{ marginLeft: 4 }}
+                />
+              </View>
+            </View>
+          </BorderlessShadowCard>
+        </Animated.View>
+      </Pressable>
 
       <ConfirmationModal
         visible={showDeleteModal}

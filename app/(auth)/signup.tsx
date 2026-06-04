@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import FormLayout from '@/components/layouts/FormLayout';
@@ -67,7 +67,7 @@ export default function SignUpScreen() {
         full_name: formData.name,
         email: formData.email,
         password: formData.password,
-        onesignal_id: onesignalId, // ← add this
+        onesignal_id: onesignalId,
       }).unwrap();
 
       showSuccess('Account created! Check your email for the verification code.');

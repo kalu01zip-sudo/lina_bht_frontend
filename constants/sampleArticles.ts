@@ -97,16 +97,16 @@ export const SAMPLE_ARTICLES: Article[] = [
       </div>
 
       <h2>Common Stress-Related Skin Issues</h2>
-      
+
       <h3>Acne Breakouts</h3>
       <p>Stress increases cortisol levels, which stimulates oil production and can lead to clogged pores and breakouts. Stress acne often appears on the chin, jawline, and forehead.</p>
-      
+
       <h3>Eczema and Psoriasis Flares</h3>
       <p>Stress weakens the skin barrier and triggers inflammatory responses, making these conditions significantly worse. Up to 70% of people with eczema report stress as a trigger.</p>
-      
+
       <h3>Premature Aging</h3>
       <p>Chronic stress accelerates the breakdown of collagen and elastin by increasing cortisol levels. This leads to fine lines, wrinkles, and loss of firmness.</p>
-      
+
       <h3>Dryness and Dehydration</h3>
       <p>Stress affects the skin's ability to retain moisture by disrupting the skin barrier function, leaving it dry, tight, and compromised.</p>
 
@@ -249,7 +249,7 @@ export const SAMPLE_ARTICLES: Article[] = [
 
       <h2>Step 3: Moisturizer</h2>
       <p>Use a lightweight moisturizer to hydrate and prepare your skin for sunscreen. Even oily skin needs moisturizer! Dehydrated skin produces more oil to compensate.</p>
-      
+
       <h2>Step 4: Sunscreen (SPF 30+)</h2>
       <p><strong>The most important step!</strong> Apply broad-spectrum sunscreen as the final step in your morning routine. Use 2 finger-lengths for face and neck. Reapply every 2 hours if you're outside!</p>
 
@@ -260,28 +260,28 @@ export const SAMPLE_ARTICLES: Article[] = [
       <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800" alt="Applying sunscreen to face" />
 
       <h2>Product Recommendations by Skin Type</h2>
-      
+
       <h3>Oily Skin</h3>
       <ul>
         <li><strong>Cleanser:</strong> Gel-based or foaming cleanser with salicylic acid</li>
         <li><strong>Moisturizer:</strong> Oil-free, gel, or water-based moisturizer</li>
         <li><strong>Sunscreen:</strong> Matte-finish, oil-free SPF</li>
       </ul>
-      
+
       <h3>Dry Skin</h3>
       <ul>
         <li><strong>Cleanser:</strong> Cream or milk cleanser (no foaming)</li>
         <li><strong>Moisturizer:</strong> Rich, cream-based moisturizer with ceramides</li>
         <li><strong>Sunscreen:</strong> Hydrating, dewy-finish SPF</li>
       </ul>
-      
+
       <h3>Sensitive Skin</h3>
       <ul>
         <li><strong>Cleanser:</strong> Fragrance-free, non-foaming cleanser</li>
         <li><strong>Moisturizer:</strong> Minimal ingredients, soothing formula</li>
         <li><strong>Sunscreen:</strong> Mineral sunscreen (zinc oxide or titanium dioxide)</li>
       </ul>
-      
+
       <h3>Combination Skin</h3>
       <ul>
         <li><strong>Cleanser:</strong> Balanced gel-cream cleanser</li>
@@ -326,16 +326,16 @@ export const SAMPLE_ARTICLES: Article[] = [
       </div>
 
       <h2>Simple Mindfulness Techniques for Busy People</h2>
-      
+
       <h3>Deep Breathing (2 minutes)</h3>
       <p>Take 5 minutes each morning for deep, intentional breathing. Try box breathing: inhale 4 sec → hold 4 sec → exhale 4 sec → hold 4 sec. Repeat 5-10 times.</p>
-      
+
       <h3>Body Scan (5 minutes)</h3>
       <p>Notice tension in your face, jaw, neck, and shoulders—areas where we hold stress. Consciously relax these areas. Your skin will thank you!</p>
-      
+
       <h3>Mindful Skincare (3 minutes)</h3>
       <p>Turn your routine into a meditation by focusing entirely on sensations: the texture of products, temperature of water, scent (if any), and the feeling of massage.</p>
-      
+
       <h3>Gratitude Practice (2 minutes)</h3>
       <p>Start your day by listing 3 things you're grateful for. Gratitude shifts your nervous system from stress response to relaxation response.</p>
 
@@ -354,16 +354,16 @@ export const SAMPLE_ARTICLES: Article[] = [
       </blockquote>
 
       <h2>Mindfulness for Common Skin Concerns</h2>
-      
+
       <h3>For Acne</h3>
       <p>Practice self-compassion. Stress picking makes acne worse. When you feel the urge to pick, pause and take 3 deep breaths instead.</p>
-      
+
       <h3>For Eczema/Psoriasis</h3>
       <p>Use guided imagery. Visualize your skin healing and calming with each breath. Studies show this reduces itch-scratch cycles.</p>
-      
+
       <h3>For Premature Aging</h3>
       <p>Facial massage while applying products. It reduces tension, increases blood flow, and stimulates collagen production.</p>
-      
+
       <h3>For Rosacea</h3>
       <p>Cool water rinses while practicing deep breathing. Heat and stress are common triggers—mindfulness helps manage both.</p>
 
@@ -435,22 +435,22 @@ export const SAMPLE_ARTICLES: Article[] = [
       </blockquote>
 
       <h2>1-Day Anti-Inflammatory Skin Diet Meal Plan</h2>
-      
+
       <h3>Breakfast (7:00 AM)</h3>
       <p>Oatmeal topped with fresh blueberries, walnuts, and a drizzle of honey. Green tea on the side.</p>
-      
+
       <h3>Morning Snack (10:00 AM)</h3>
       <p>Green apple with 1 tablespoon almond butter.</p>
-      
+
       <h3>Lunch (1:00 PM)</h3>
       <p>Quinoa bowl with roasted salmon, spinach, cherry tomatoes, cucumber, avocado, and a lemon-tahini dressing.</p>
-      
+
       <h3>Afternoon Snack (4:00 PM)</h3>
       <p>Carrot and celery sticks with hummus. Turmeric-ginger tea.</p>
-      
+
       <h3>Dinner (7:00 PM)</h3>
       <p>Grilled chicken or tofu with roasted sweet potato, broccoli, and cauliflower. Season with turmeric, black pepper, and garlic.</p>
-      
+
       <h3>Evening (9:00 PM)</h3>
       <p>Small piece of dark chocolate (70%+ cocoa) and chamomile tea.</p>
 
@@ -469,7 +469,7 @@ export const SAMPLE_ARTICLES: Article[] = [
       </ul>
 
       <p><strong>Patience is essential!</strong> Give an anti-inflammatory diet 4-6 weeks to see noticeable improvements in your skin. Track your progress with photos and a food/symptom diary. Many people report clearer skin, reduced redness, less puffiness, and a natural glow within 8 weeks.</p>
-      
+
       <p><strong>Remember:</strong> An 80/20 approach works best—eat anti-inflammatory foods 80% of the time and allow flexibility 20% of the time. Perfect isn't sustainable, but progress is!</p>
     `,
     readTime: '9 min read',

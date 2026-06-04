@@ -23,6 +23,7 @@
     "@react-navigation/native": "^7.1.6",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.6",
+    "babel-preset-expo": "~54.0.10",
     "expo": "~54.0.35",
     "expo-apple-authentication": "~8.0.8",
     "expo-auth-session": "~7.0.11",
@@ -81,7 +82,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~19.1.10",
-    "babel-preset-expo": "~12.0.0",
     "eslint": "^9.25.1",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.2",

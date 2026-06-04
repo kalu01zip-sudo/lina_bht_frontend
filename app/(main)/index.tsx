@@ -1,5 +1,5 @@
 // screens/home/index.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   ScrollView,
   View,
@@ -14,7 +14,6 @@ import { useSelector } from 'react-redux';
 import HomeHeader from '@/components/header/HomeHeader';
 import { QuickActionsRow } from '@/components/home/QuickActionsRow';
 import { SkinProgressCard } from '@/components/home/SkinProgressCard';
-import { MorningRoutineCard } from '@/components/home/MorningRoutineCard';
 import { LAYOUT } from '@/constants/constants';
 import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
@@ -22,9 +21,10 @@ import AnalysingResultScoreCard from '@/components/scans/AnalysingResultScoreCar
 import { useHomeScreen } from '@/components/home/hooks/useHomeScreen';
 import { useGetHomeScansQuery } from '@/store/api/homeApi';
 import { selectCurrentUser } from '@/store/slices/authSlice';
-import { RoutineStep } from '@/types/home';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { useGetUnreadCountQuery } from '@/store/api/notificationApi';
+import { RoutineSummaryCard } from '@/components/home/RoutineSummaryCard';
+import { useFocusEffect } from 'expo-router';
 
 type ScanTab = 'face' | 'hair';
 
@@ -57,8 +57,15 @@ export default function HomeScreen() {
     isError,
     refetch,
   } = useGetHomeScansQuery(undefined, {
-    refetchOnMountOrArgChange: true, // Refetch when component mounts
+    refetchOnMountOrArgChange: true,
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      setCompletedSteps({});
+      refetch();
+    }, [refetch])
+  );
 
   const {
     // notificationCount,
@@ -106,41 +113,39 @@ export default function HomeScreen() {
 
   const activeStats = activeTab === 'face' ? faceStats : hairStats;
 
-  // Transform API routine items to the format MorningRoutineCard expects
   const morningRoutineData = useMemo(() => {
-    if (!homeData?.routine?.data) {
-      return {
-        id: 'morning',
-        name: 'Morning Routine',
-        steps: [] as RoutineStep[],
-        completedSteps: 0,
-        totalSteps: 0,
-      };
-    }
+    if (!homeData?.routine?.data) return { steps: [], completedCount: 0, progress: 0 };
 
-    const morningSteps = homeData.routine.data.filter((item) => item.time === 'morning');
+    const steps = homeData.routine.data
+      .filter((item) => item.time === 'morning')
+      .map((item, index) => ({
+        id: item.id || `morning_${index}`,
+        name: item.product_name || item.product_category || 'Routine step',
+        completed: completedSteps[item.id] ?? item.is_completed ?? false,
+      }));
 
-    const steps: RoutineStep[] = morningSteps.map((item, index) => ({
-      id: item.id || `step_${index}`,
-      name: item.product_name || item.product_category || 'Routine step',
-      completed: completedSteps[item.id] || false,
-    }));
+    const completedCount = steps.filter((s) => s.completed).length;
+    const progress = steps.length > 0 ? (completedCount / steps.length) * 100 : 0;
 
-    const completedCount = steps.filter((step) => step.completed).length;
-
-    return {
-      id: 'morning_routine',
-      name: 'Morning Routine',
-      steps: steps,
-      completedSteps: completedCount,
-      totalSteps: steps.length,
-    };
+    return { steps, completedCount, progress };
   }, [homeData, completedSteps]);
 
-  const routinePercent =
-    morningRoutineData.totalSteps > 0
-      ? (morningRoutineData.completedSteps / morningRoutineData.totalSteps) * 100
-      : 0;
+  const nightRoutineData = useMemo(() => {
+    if (!homeData?.routine?.data) return { steps: [], completedCount: 0, progress: 0 };
+
+    const steps = homeData.routine.data
+      .filter((item) => item.time === 'night')
+      .map((item, index) => ({
+        id: item.id || `night_${index}`,
+        name: item.product_name || item.product_category || 'Routine step',
+        completed: completedSteps[item.id] ?? item.is_completed ?? false,
+      }));
+
+    const completedCount = steps.filter((s) => s.completed).length;
+    const progress = steps.length > 0 ? (completedCount / steps.length) * 100 : 0;
+
+    return { steps, completedCount, progress };
+  }, [homeData, completedSteps]);
 
   const handleToggleStep = (stepId: string, currentCompleted: boolean) => {
     setCompletedSteps((prev) => ({ ...prev, [stepId]: !currentCompleted }));
@@ -279,13 +284,38 @@ export default function HomeScreen() {
         {/* Quick Actions Row - Navigation Buttons */}
         <QuickActionsRow actions={quickActions} onActionPress={handleQuickAction} />
 
-        {/* Morning Routine Card */}
-        <MorningRoutineCard
-          routine={morningRoutineData}
-          completedStepsCount={morningRoutineData.completedSteps}
-          routineProgress={routinePercent}
-          onToggleStep={handleToggleStep}
+        <View style={{ height: 20 }} />
+
+        {/* Morning Routine — rounded top, flat bottom */}
+        <RoutineSummaryCard
+          title="Morning Routine"
+          icon="sunny-outline"
+          steps={morningRoutineData.steps}
+          completedCount={morningRoutineData.completedCount}
+          progress={morningRoutineData.progress}
+          maxVisible={3}
+          topRadius={24}
+          bottomRadius={0}
           onViewAll={handleViewAllRoutines}
+          onStepToggled={(stepId, newCompleted) => {
+            setCompletedSteps((prev) => ({ ...prev, [stepId]: newCompleted }));
+          }}
+        />
+        <View style={{ height: 4 }} />
+        {/* Night Routine — flat top, rounded bottom */}
+        <RoutineSummaryCard
+          title="Night Routine"
+          icon="moon-outline"
+          steps={nightRoutineData.steps}
+          completedCount={nightRoutineData.completedCount}
+          progress={nightRoutineData.progress}
+          maxVisible={3}
+          topRadius={0}
+          bottomRadius={24}
+          onViewAll={handleViewAllRoutines}
+          onStepToggled={(stepId, newCompleted) => {
+            setCompletedSteps((prev) => ({ ...prev, [stepId]: newCompleted }));
+          }}
         />
 
         {/* Skin Progress Card */}

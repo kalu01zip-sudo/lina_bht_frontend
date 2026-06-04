@@ -18,6 +18,8 @@ export interface HomeRoutineItem {
   time: 'morning' | 'night' | 'weekly';
   product_name: string | null;
   product_category?: string;
+  product_url: string | null;
+  is_completed: boolean;
 }
 
 export interface HomeScansResponse {

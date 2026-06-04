@@ -37,7 +37,7 @@ export const useHomeData = (): UseHomeDataReturn => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('MOCK_QUICK_ACTIONS:', MOCK_HOME_DATA.quickActions);
+      // console.log('MOCK_QUICK_ACTIONS:', MOCK_HOME_DATA.quickActions);
       setData(MOCK_HOME_DATA);
     } catch (error) {
       console.error('Error loading home data:', error);

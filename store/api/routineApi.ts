@@ -163,10 +163,19 @@ export interface ManualRoutineResponse {
   };
 }
 
+// Update GetAllRoutinesResponse
 export interface GetAllRoutinesResponse {
   success: boolean;
+  total: number;
+  limit: number;
+  offset: number;
   count: number;
   data: RoutineStep[];
+}
+
+export interface GetAllRoutinesArg {
+  limit?: number;
+  offset?: number;
 }
 
 export interface HairRoutineStep {
@@ -249,11 +258,19 @@ export const routineApi = baseApi.injectEndpoints({
      * Toggles the is_completed flag for a routine step.
      * Body { is_completed } will be re-added once backend supports it.
      */
+    // patchRoutineStep: builder.mutation<PatchStepResponse, PatchStepArg>({
+    //   query: ({ step_id }) => ({
+    //     url: `/routine/step/${step_id}/complete`,
+    //     method: 'PATCH',
+    //   }),
+    // }),
+
     patchRoutineStep: builder.mutation<PatchStepResponse, PatchStepArg>({
       query: ({ step_id }) => ({
         url: `/routine/step/${step_id}/complete`,
         method: 'PATCH',
       }),
+      invalidatesTags: ['User'],
     }),
 
     generateManualRoutine: builder.mutation<ManualRoutineResponse, ManualRoutineArg>({
@@ -272,11 +289,28 @@ export const routineApi = baseApi.injectEndpoints({
       }),
     }),
 
-    getAllRoutines: builder.query<GetAllRoutinesResponse, void>({
-      query: () => ({
-        url: '/routine/all',
+    getAllRoutines: builder.query<GetAllRoutinesResponse, GetAllRoutinesArg>({
+      query: ({ limit = 10, offset = 0 } = {}) => ({
+        url: `/routine/all?limit=${limit}&offset=${offset}`,
         method: 'GET',
       }),
+      // All pages share one cache entry
+      serializeQueryArgs: ({ endpointName }) => endpointName,
+      merge: (currentCache, newItems, { arg }) => {
+        if ((arg.offset ?? 0) === 0) {
+          // Fresh load or refresh — replace
+          currentCache.data = newItems.data;
+        } else {
+          // Append, deduplicating by id
+          const existingIds = new Set(currentCache.data.map((s) => s.id));
+          const unique = newItems.data.filter((s) => !existingIds.has(s.id));
+          currentCache.data.push(...unique);
+        }
+        currentCache.total = newItems.total;
+        currentCache.count = newItems.count;
+        currentCache.success = newItems.success;
+      },
+      forceRefetch: ({ currentArg, previousArg }) => currentArg?.offset !== previousArg?.offset,
       providesTags: ['Routine'],
     }),
 
