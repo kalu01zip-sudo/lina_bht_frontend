@@ -62,7 +62,7 @@ export const notificationApi = baseApi.injectEndpoints({
     markAllNotificationsRead: builder.mutation<MarkAllReadResponse, void>({
       query: () => ({
         url: '/lia/notifications/read-all',
-        method: 'POST',
+        method: 'PATCH',
       }),
       invalidatesTags: [
         { type: 'User', id: 'NOTIFICATIONS' },

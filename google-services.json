@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "953326226421",
+    "project_id": "gixy-ai",
+    "storage_bucket": "gixy-ai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953326226421:android:7f132a295ad38f305aaebc",
+        "android_client_info": {
+          "package_name": "com.sheikhrussell123.gixy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953326226421-fme7vndioep5p42lijeau1freo6d15tk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArb5e2yFlOqEhe-98Rlj9ltTU8WY_FRY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953326226421-fme7vndioep5p42lijeau1freo6d15tk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "953326226421-i7968t8uacoaakg3i2hl11j056nsdnu3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sheikhrussell123.gixy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

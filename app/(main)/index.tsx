@@ -43,8 +43,10 @@ export default function HomeScreen() {
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
   const [isSwitchingTab, setIsSwitchingTab] = useState(false);
 
-  const { data: unreadData } = useGetUnreadCountQuery(undefined, {
-    pollingInterval: 60000, // refresh every 60s
+  const { data: unreadData, refetch: refetchUnread } = useGetUnreadCountQuery(undefined, {
+    pollingInterval: 60000,
+    refetchOnFocus: true, // ← refetches when app comes to foreground
+    refetchOnMountOrArgChange: true, // ← refetches when screen gains focus
   });
   const notificationCount = unreadData?.unread_count ?? 0;
 
@@ -64,7 +66,8 @@ export default function HomeScreen() {
     useCallback(() => {
       setCompletedSteps({});
       refetch();
-    }, [refetch])
+      refetchUnread(); //  — refreshes badge count when returning from notifications
+    }, [refetch, refetchUnread])
   );
 
   const {

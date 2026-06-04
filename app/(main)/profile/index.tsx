@@ -149,7 +149,6 @@ const Profile = () => {
             <View className="w-full flex-row items-center gap-3">
               {/* ✅ avatar comes from /profile/profile_edit via useGetProfileQuery, */}
 
-              {/* <AvatarFromApi /> */}
               <Avatar
                 source={profile?.avatar_url ?? undefined}
                 size={50}
