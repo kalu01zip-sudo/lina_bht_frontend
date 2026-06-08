@@ -396,7 +396,7 @@ export default function FaceScanLoadingScreen() {
 
         <View className="mt-8 items-center">
           <Text className="font-outfitMedium text-[24px]" style={{ color: '#2E2117' }}>
-            Lia Analyzing Your Skin
+            Gixy AI Analyzing Your Skin
           </Text>
           <Text
             className="mt-2 px-8 text-center font-outfit text-[14px]"

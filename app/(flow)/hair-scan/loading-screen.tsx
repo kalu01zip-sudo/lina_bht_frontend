@@ -261,7 +261,7 @@ export default function HairLoadingScreen() {
 
         <View className="mt-8 items-center">
           <Text className="font-outfitMedium text-[24px]" style={{ color: '#2E2117' }}>
-            Lia Analyzing Hair & Scalp
+            Gixy AI Analyzing Hair & Scalp
           </Text>
           <Text
             className="mt-2 px-8 text-center font-outfit text-[14px]"

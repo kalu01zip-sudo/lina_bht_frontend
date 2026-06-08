@@ -55,7 +55,7 @@ const WELCOME_MESSAGE: Message = {
   timestamp: new Date(),
 };
 
-const PAGE_LIMIT = 20;
+const PAGE_LIMIT = 10;
 
 // ─── Date helpers ─────────────────────────────────────────────────────────────
 
@@ -289,6 +289,7 @@ const AiAssistantScreen = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [totalMessages, setTotalMessages] = useState(0);
 
   // Pagination
   const [offset, setOffset] = useState(0);
@@ -326,8 +327,9 @@ const AiAssistantScreen = () => {
         setHasMore(false);
       } else {
         setMessages(msgs.map(toLocalMessage));
-        setHasMore(msgs.length === PAGE_LIMIT);
+        setHasMore(msgs.length < result.total);
         setOffset(PAGE_LIMIT);
+        setTotalMessages(result.total);
       }
     } catch {
       setMessages([WELCOME_MESSAGE]);
@@ -366,9 +368,6 @@ const AiAssistantScreen = () => {
 
   const handleLoadMore = useCallback(async () => {
     if (isLoadingMore || !hasMore || isLoadingHistory) return;
-    // Snapshot current content height and scroll position before we prepend messages.
-    // handleContentSizeChange will use this to restore scroll position after prepend.
-    // contentHeightBeforePrepend is set here; scrollYBeforePrepend is kept current via onScroll.
     setIsLoadingMore(true);
     try {
       const result = await fetchHistory({ limit: PAGE_LIMIT, offset }).unwrap();
@@ -379,10 +378,12 @@ const AiAssistantScreen = () => {
         return;
       }
 
-      // Prepend — after React re-renders we restore the scroll position
       setMessages((prev) => [...older.map((m, i) => toLocalMessage(m, offset + i)), ...prev]);
-      setOffset((prev) => prev + older.length);
-      setHasMore(older.length === PAGE_LIMIT);
+
+      const newOffset = offset + older.length;
+      setOffset(newOffset);
+      setTotalMessages(result.total);
+      setHasMore(newOffset < result.total); // ← use result.total directly, not stale state
     } catch {
       // Silent
     } finally {

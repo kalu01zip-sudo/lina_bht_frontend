@@ -16,6 +16,7 @@
 // }
 
 // export interface ChatHistoryResponse {
+//   total: number;
 //   messages: ChatHistoryMessage[];
 // }
 
@@ -53,7 +54,6 @@
 //   useClearChatHistoryMutation,
 // } = chatApi;
 
-// store/api/chatApi.ts
 import { baseApi } from './baseApi';
 
 export interface ChatMessageRequest {
@@ -71,6 +71,9 @@ export interface ChatHistoryMessage {
 }
 
 export interface ChatHistoryResponse {
+  total: number;
+  limit: number;
+  offset: number;
   messages: ChatHistoryMessage[];
 }
 
@@ -87,8 +90,8 @@ export const chatApi = baseApi.injectEndpoints({
 
     getChatHistory: builder.query<ChatHistoryResponse, { limit: number; offset: number }>({
       query: ({ limit, offset }) => ({
-        url: `/chat/history?limit=${limit}&offset=${offset}`,
-        method: 'GET',
+        url: '/chat/history',
+        params: { limit, offset }, // ← use params object, not string interpolation
       }),
     }),
 

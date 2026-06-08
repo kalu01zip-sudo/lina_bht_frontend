@@ -24,7 +24,7 @@ import { selectCurrentUser } from '@/store/slices/authSlice';
 import BorderlessShadowCard from '@/components/cards/BorderlessShadowCard';
 import { useGetUnreadCountQuery } from '@/store/api/notificationApi';
 import { RoutineSummaryCard } from '@/components/home/RoutineSummaryCard';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 
 type ScanTab = 'face' | 'hair';
 
@@ -38,6 +38,8 @@ const checkedAreaToStats = (area: Record<string, number>) =>
   }));
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   const [activeTab, setActiveTab] = useState<ScanTab>('face');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
@@ -78,6 +80,10 @@ export default function HomeScreen() {
     handleSkinProgress,
     quickActions,
   } = useHomeScreen();
+
+  const handleNavigateToFaceTest = () => {
+    router.push('/(flow)/face-detecting-scan/FaceTestScreen');
+  };
 
   const faceScan = homeData?.face_scan ?? null;
   const hairScan = homeData?.scalp_scan ?? null;
@@ -323,6 +329,29 @@ export default function HomeScreen() {
 
         {/* Skin Progress Card */}
         <SkinProgressCard onPress={handleSkinProgress} />
+
+        {/* TEMPORARY TEST BUTTON - Remove after testing */}
+        {/* <TouchableOpacity
+          onPress={handleNavigateToFaceTest}
+          style={{
+            backgroundColor: '#FF5722',
+            paddingVertical: 12,
+            paddingHorizontal: 20,
+            borderRadius: 10,
+            marginBottom: 15,
+            marginTop: 5,
+          }}
+          activeOpacity={0.7}>
+          <Text
+            style={{
+              color: 'white',
+              textAlign: 'center',
+              fontFamily: 'Outfit-Bold',
+              fontSize: 14,
+            }}>
+            🧪 TEST: Face Detection Scanner
+          </Text>
+        </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );

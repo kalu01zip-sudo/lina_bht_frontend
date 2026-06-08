@@ -387,7 +387,7 @@ const PremiumPlanScreen = () => {
   if (renderError) {
     return (
       <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-        <CustomHeader title="Waxi Premium" height={50} backButton />
+        <CustomHeader title="Gixy Premium" height={50} backButton />
         <ErrorScreen
           message={renderError}
           onRetry={() => router.replace('/(flow)/profile/premium-plan-screen')}
@@ -398,7 +398,7 @@ const PremiumPlanScreen = () => {
 
   return (
     <SafeAreaView edges={['top', 'right']} className="flex-1 bg-backgroundColor">
-      <CustomHeader title="Waxi Premium" height={50} backButton />
+      <CustomHeader title="Gixy Premium" height={50} backButton />
 
       <ScrollView
         showsVerticalScrollIndicator={false}

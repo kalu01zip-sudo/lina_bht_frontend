@@ -54,14 +54,6 @@ const getImageForCategory = (category: string): string => {
 
 // ── Phase types ───────────────────────────────────────────────────────────────
 
-type PhaseType = 'repair' | 'balance' | 'maintenance';
-
-const PHASE_PROGRESS: Record<PhaseType, number> = {
-  repair: 33,
-  balance: 66,
-  maintenance: 100,
-};
-
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 const chunkArray = <T,>(array: T[], size: number): T[][] => {
@@ -273,7 +265,6 @@ const AiRoutineScreen = () => {
   // It starts as the full list from the API and shrinks as the user taps trash.
   const [steps, setSteps] = useState<RoutineStep[]>([]);
   const [generateError, setGenerateError] = useState<string | null>(null);
-  const [selectedPhase, setSelectedPhase] = useState<PhaseType>('repair');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const { isRendering, isContentReady, renderError } = useScreenReady({
@@ -290,16 +281,25 @@ const AiRoutineScreen = () => {
       return;
     }
     setGenerateError(null);
-    setSteps([]); // clear previous steps while loading
+    setSteps([]);
+
     try {
       const result = await generateRoutine({ product_scan_id: scan_id }).unwrap();
+
+      // ── Handle duplicate: product already in a saved routine ──────────────
+      if (result.duplicate) {
+        setGenerateError(result.message ?? 'This product is already part of your saved routine.');
+        return;
+      }
+
+      // ── Guard: routine payload must exist ─────────────────────────────────
+      if (!result.routine?.routine?.steps) {
+        setGenerateError('The routine could not be generated. Please try again.');
+        return;
+      }
+
       setRoutineResponse(result);
       setSteps(result.routine.routine.steps);
-      // Default phase to whatever the backend recommends
-      const backendPhase = result.routine.routine.phase as PhaseType;
-      if (backendPhase && PHASE_PROGRESS[backendPhase] !== undefined) {
-        setSelectedPhase(backendPhase);
-      }
     } catch (err: any) {
       console.error('[AiRoutineScreen] generate error:', err);
       setGenerateError(
@@ -345,7 +345,7 @@ const AiRoutineScreen = () => {
 
   // ── Derived helpers ─────────────────────────────────────────────────────────
 
-  const timeLabel = routineResponse?.routine.routine.time ?? 'weekly';
+  const timeLabel = routineResponse?.routine?.routine?.time ?? 'weekly';
 
   const getSectionIcon = (time: string) => {
     const t = time.toLowerCase();
@@ -364,7 +364,7 @@ const AiRoutineScreen = () => {
     return `${time.charAt(0).toUpperCase()}${time.slice(1)} Routine`;
   };
 
-  const whyPoints: string[] = routineResponse?.routine.why ?? [];
+  const whyPoints: string[] = routineResponse?.routine?.why ?? [];
 
   // ── Guards ──────────────────────────────────────────────────────────────────
 
@@ -412,6 +412,8 @@ const AiRoutineScreen = () => {
   }
 
   if (!routineResponse) return null;
+
+  console.log(`Step :`, steps);
 
   // ── Render ──────────────────────────────────────────────────────────────────
 
@@ -461,64 +463,6 @@ const AiRoutineScreen = () => {
               <ReasonPointsGrid points={whyPoints} />
             </View>
           )}
-
-          {/* ── Phase selector ────────────────────────────────────────────── */}
-          <View className="mb-0 mt-6">
-            <View className="relative mb-3">
-              <GradientProgressBar
-                progress={PHASE_PROGRESS[selectedPhase]}
-                height={8}
-                gradientColors={['#977857', '#B89474', '#7A5D3E']}
-                gradientLocations={[0.25, 0.6036, 0.9571]}
-                backgroundColor="#2E21173D"
-                borderRadius={10}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  left: `${PHASE_PROGRESS[selectedPhase]}%`,
-                  top: -4,
-                  marginLeft: -16,
-                }}>
-                <LinearGradient
-                  colors={['#977857', '#B89474', '#7A5D3E']}
-                  locations={[0.25, 0.6036, 0.9571]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{ width: 16, height: 16, borderRadius: 8 }}
-                />
-              </View>
-            </View>
-
-            <View className="mt-3 flex-row justify-between gap-3">
-              {(['repair', 'balance', 'maintenance'] as PhaseType[]).map((phase) => (
-                <TouchableOpacity
-                  key={phase}
-                  onPress={() => setSelectedPhase(phase)}
-                  className="flex-1 rounded-xl py-3"
-                  style={{
-                    backgroundColor: selectedPhase === phase ? '#97785720' : 'transparent',
-                    borderWidth: 1,
-                    borderColor: selectedPhase === phase ? '#977857' : '#FFFFFF99',
-                  }}>
-                  <Text
-                    className="text-center font-outfitMedium text-[14px]"
-                    style={{
-                      color: selectedPhase === phase ? '#977857' : '#2E2117',
-                      textShadowColor: '#FFFFFF',
-                      textShadowOffset: { width: 1, height: 1 },
-                      textShadowRadius: 2,
-                    }}>
-                    {phase === 'repair'
-                      ? 'Repair'
-                      : phase === 'balance'
-                        ? 'Balance'
-                        : 'Maintenance'}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
 
           {/* ── Routine steps ─────────────────────────────────────────────── */}
           {steps.length > 0 ? (

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react'; // ✅ Add useState
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeader from '@/components/header/CustomHeader';
 import { LAYOUT } from '@/constants/constants';
@@ -23,7 +23,7 @@ import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
 import { useAuth } from '@/hooks/useAuth';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
-import { useGetProfileQuery, useGetProfileTabQuery } from '@/store/api/profileApi';
+import { useGetProfileTabQuery } from '@/store/api/profileApi';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/store/slices/authSlice';
@@ -138,7 +138,7 @@ const Profile = () => {
             opacity: isContentReady ? 1 : 0,
             transform: [{ translateY: isContentReady ? 0 : 10 }],
           }}>
-          {/* Profile Header Card */}`
+          {/* Profile Header Card */}
           <BorderlessShadowCard
             style={{ paddingVertical: 24, paddingHorizontal: 24, alignItems: 'center' }}>
             <PillowBadge
