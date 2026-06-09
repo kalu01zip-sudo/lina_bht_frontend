@@ -1,5 +1,5 @@
 // app/(main)/scan/Scan.tsx
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LAYOUT } from '@/constants/constants';
@@ -42,7 +42,7 @@ const Scan = () => {
   };
 
   const handleRetry = () => {
-    router.replace('/(main)/scan');
+    router.replace('/(main)/scans');
   };
 
   // Show loading while screen is rendering
@@ -137,7 +137,12 @@ const Scan = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <FaceScanIcon size={26} />
+                {/* <FaceScanIcon size={26} /> */}
+                <Image
+                  source={require('@/assets/images/hair-scalp-scan-icon.png')}
+                  style={{ width: 24, height: 24 }}
+                  resizeMode="contain"
+                />
               </BorderlessShadowCard>
 
               <View className="flex-1">
@@ -171,7 +176,12 @@ const Scan = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <FaceScanIcon size={26} />
+                {/* <FaceScanIcon size={26} /> */}
+                <Image
+                  source={require('@/assets/images/product-scan-icon.png')}
+                  style={{ width: 24, height: 24 }}
+                  resizeMode="contain"
+                />
               </BorderlessShadowCard>
 
               <View className="flex-1">

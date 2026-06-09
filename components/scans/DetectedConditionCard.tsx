@@ -1,8 +1,17 @@
-// components/scans/DetectedConditionCard.tsx
-import React from 'react';
-import { View, Text, Image, ImageSourcePropType } from 'react-native';
-import PillowBadge from '@/components/buttons/PillowBadge';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ImageSourcePropType,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { GradientProgressBar } from '@/components/GradientProgressBar';
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface DetectedCondition {
   id: string;
@@ -10,185 +19,183 @@ export interface DetectedCondition {
   severity: 'Low' | 'Medium' | 'High';
   description: string;
   progressValue: number;
-  progressColor?: string[];
-  imageUri?: string;
-  imageSource?: ImageSourcePropType;
-  // ImageUri?: string; // Added: for showing face area
-  ImageUri?: ImageSourcePropType; // Added: for showing face area
-  faceArea?: { x: number; y: number; width: number; height: number }; // Added: for highlighting specific area
+  progressColor: [string, string];
+  ImageUri: ImageSourcePropType;
+  phase?: string;
 }
 
 interface DetectedConditionCardProps {
   condition: DetectedCondition;
-  isLast?: boolean;
-  showFaceImage?: boolean; // Added: toggle face image visibility
-  onImagePress?: (condition: DetectedCondition) => void; // Added: handle image press
+  style?: StyleProp<ViewStyle>;
+  /** Called when the condition image thumbnail is tapped */
+  onImagePress?: (source: ImageSourcePropType, title: string, severity: string) => void;
 }
+
+// ── Severity colours ──────────────────────────────────────────────────────────
+
+const severityStyle = (
+  severity: 'Low' | 'Medium' | 'High'
+): { bg: string; text: string; dot: string } => {
+  switch (severity) {
+    case 'High':
+      return { bg: '#FEF2F2', text: '#EF4444', dot: '#EF4444' };
+    case 'Medium':
+      return { bg: '#FFFBEB', text: '#F59E0B', dot: '#F59E0B' };
+    default:
+      return { bg: '#EFF6FF', text: '#3B82F6', dot: '#3B82F6' };
+  }
+};
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export const DetectedConditionCard: React.FC<DetectedConditionCardProps> = ({
   condition,
-  isLast = false,
-  showFaceImage = false,
+  style,
   onImagePress,
 }) => {
-  // Get severity color for progress bar
-  const getProgressColors = (): [string, string] => {
-    if (condition.progressColor) return condition.progressColor as [string, string];
-
-    switch (condition.severity) {
-      case 'High':
-        return ['#F87171', '#DC2626']; // Red
-      case 'Medium':
-        return ['#FBBF24', '#D97706']; // Yellow/Orange
-      case 'Low':
-        return ['#60A5FA', '#2563EB']; // Blue
-      default:
-        return ['#60A5FA', '#2563EB'];
-    }
+  const { bg, text, dot } = severityStyle(condition.severity);
+  const handleImagePress = () => {
+    onImagePress?.(condition.ImageUri, condition.title, condition.severity);
   };
 
-  // Get severity badge style
-  const getSeverityBadgeStyle = () => {
-    switch (condition.severity) {
-      case 'High':
-        return { backgroundColor: '#FFFFFF', textColor: '#2E2117B2' };
-      case 'Medium':
-        return { backgroundColor: '#FFFFFF', textColor: '#2E2117B2' };
-      case 'Low':
-        return { backgroundColor: '#FFFFFF', textColor: '#2E2117B2' };
-      default:
-        return { backgroundColor: '#FFFFFF', textColor: '#2E2117B2' };
-    }
-  };
-
-  const badgeStyle = getSeverityBadgeStyle();
-
-  // Determine which image to show
-  const imageToShow: ImageSourcePropType | null =
-    showFaceImage && condition.ImageUri
-      ? condition.ImageUri
-      : (condition.imageSource ?? (condition.imageUri ? { uri: condition.imageUri } : null));
+  useEffect(() => {
+    console.log('phase: ', condition.phase);
+  }, []);
 
   return (
     <View
-      className="w-full flex-row items-start gap-3 bg-[#E8DDD0] p-3"
-      style={{
-        borderWidth: 1,
-        borderRadius: 24,
-        borderColor: '#FFFFFF99',
-        marginBottom: isLast ? 0 : 12,
-      }}>
-      {/* Left Side: Image/Thumbnail */}
+      style={[
+        {
+          borderRadius: 20,
+          overflow: 'hidden',
+          backgroundColor: '#F0E6D8',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.06,
+          shadowRadius: 6,
+          elevation: 2,
+        },
+        style,
+      ]}>
+      {/* ── Image thumbnail — tappable ───────────────────────────────────── */}
       <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => onImagePress?.(condition)}
+        onPress={handleImagePress}
+        activeOpacity={onImagePress ? 0.85 : 1}
         disabled={!onImagePress}
-        className="h-[90px] w-[64px] overflow-hidden rounded-xl"
-        style={{
-          borderWidth: 1,
-          borderColor: '#FFFFFF99',
-        }}>
-        {/* {imageToShow ? (
-          typeof imageToShow === 'string' ? (
-            <Image
-              source={{ uri: imageToShow }}
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="cover"
-            />
-          ) : (
-            <Image
-              source={imageToShow}
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="cover"
-            />
-          )
-        ) : (
-          <View className="h-full w-full items-center justify-center bg-[#D4C5B0]">
-            <Text className="font-outfit text-[10px] text-[#2E211799]">No image</Text>
-          </View>
-        )} */}
-        {imageToShow ? (
-          <Image
-            source={imageToShow}
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="cover"
-          />
-        ) : (
-          <View className="h-full w-full items-center justify-center bg-[#D4C5B0]">
-            <Text className="font-outfit text-[10px] text-[#2E211799]">No image</Text>
-          </View>
-        )}
+        style={{ position: 'relative' }}>
+        <Image
+          source={condition.ImageUri}
+          style={{ width: '100%', height: 180, resizeMode: 'cover' }}
+        />
 
-        {/* Optional: Show area highlight indicator */}
-        {condition.faceArea && (
-          <View className="absolute bottom-1 right-1 rounded-full bg-[#361A0DCC] px-1.5 py-0.5">
-            <Text className="font-outfit text-[8px] text-white">Area</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      {/* Right Side: Content Container */}
-      <View className="flex-1" style={{ minHeight: 90, justifyContent: 'space-between' }}>
-        <View>
-          {/* Title and Badge Row */}
-          <View className="w-full flex-row items-center justify-between">
-            <Text
-              className="font-outfitMedium text-[13px]"
-              style={{
-                color: '#2E2117',
-                textShadowColor: '#FFFFFF',
-                textShadowOffset: { width: 1, height: 1 },
-                textShadowRadius: 2,
-              }}>
-              {condition.title}
-            </Text>
-            <PillowBadge
-              title={condition.severity}
-              textStyle={{ color: badgeStyle.textColor, fontSize: 10 }}
-              style={{
-                backgroundColor: badgeStyle.backgroundColor,
-                paddingVertical: 2,
-                paddingHorizontal: 10,
-              }}
-            />
-          </View>
-
-          {/* Description Text */}
-          <Text
-            className="mt-2 font-outfit text-[12px] leading-4"
+        {/* Expand icon overlay — only when tappable */}
+        {onImagePress && (
+          <View
             style={{
-              color: '#2E211799',
-              textShadowColor: '#FFFFFF',
-              textShadowOffset: { width: 1, height: 1 },
-              textShadowRadius: 2,
+              position: 'absolute',
+              bottom: 10,
+              right: 10,
+              width: 32,
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: '#00000066',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            {condition.description}
+            <Ionicons name="expand-outline" size={16} color="#FFFFFF" />
+          </View>
+        )}
+
+        {/* Severity badge overlaid on image */}
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 5,
+            backgroundColor: bg + 'EE',
+            paddingHorizontal: 10,
+            paddingVertical: 4,
+            borderRadius: 100,
+          }}>
+          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: dot }} />
+          <Text style={{ fontFamily: 'Outfit-Medium', fontSize: 11, color: text }}>
+            {condition.severity} severity
           </Text>
         </View>
+      </TouchableOpacity>
 
-        {/* Progress Bar */}
-        <View style={{ height: 10, width: '100%', marginTop: 12 }}>
-          <GradientProgressBar
-            height={10}
-            progress={condition.progressValue}
-            gradientColors={getProgressColors()}
-            backgroundColor="#ddd9d6"
+      {/* ── Content ──────────────────────────────────────────────────────── */}
+      <View style={{ padding: 14 }}>
+        <Text style={{ fontFamily: 'Outfit-Medium', fontSize: 15, color: '#2E2117' }}>
+          {condition.title}
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: 'Outfit-Regular',
+            fontSize: 13,
+            color: '#2E2117AA',
+            marginTop: 6,
+            lineHeight: 19,
+          }}>
+          {condition.description}
+        </Text>
+
+        {/* Progress bar */}
+        {/* Progress bar */}
+        <View style={{ marginTop: 12 }}>
+          <View
             style={{
-              height: 10,
-              borderRadius: 10,
-              overflow: 'hidden',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 6,
+            }}>
+            <Text style={{ fontFamily: 'Outfit-Regular', fontSize: 11, color: '#2E211766' }}>
+              Severity score
+            </Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              {/* Phase badge — only shown when present */}
+              {condition.phase ? (
+                <View
+                  style={{
+                    backgroundColor: '#2E211712',
+                    paddingHorizontal: 8,
+                    paddingVertical: 2,
+                    borderRadius: 100,
+                  }}>
+                  <Text style={{ fontFamily: 'Outfit-Medium', fontSize: 10, color: '#2E2117AA' }}>
+                    {condition.phase}
+                  </Text>
+                </View>
+              ) : null}
+
+              <Text style={{ fontFamily: 'Outfit-Medium', fontSize: 11, color: text }}>
+                {condition.progressValue}/100
+              </Text>
+            </View>
+          </View>
+
+          <GradientProgressBar
+            progress={condition.progressValue}
+            gradientColors={condition.progressColor}
+            style={{
+              height: 8,
+              borderRadius: 4,
               borderWidth: 1,
               borderTopColor: '#c9beb177',
               borderLeftColor: '#c9beb177',
               borderBottomColor: '#FFFFFF99',
               borderRightColor: '#FFFFFF99',
             }}
+            backgroundColor="#F0EBE6"
           />
         </View>
       </View>
     </View>
   );
 };
-
-// Add TouchableOpacity import
-import { TouchableOpacity } from 'react-native';

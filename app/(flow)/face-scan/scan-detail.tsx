@@ -1,3 +1,4 @@
+// app/(flow)/face-scan/scan-detail.tsx  (complete corrected file)
 import { ImageSourcePropType, ScrollView, View } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,6 +41,7 @@ const normaliseSeverity = (raw: string): 'Low' | 'Medium' | 'High' => {
 const severityGradient = (severity: string): [string, string] => {
   switch (severity.toLowerCase()) {
     case 'severe':
+    case 'high':
       return ['#F87171', '#DC2626'];
     case 'moderate':
     case 'medium':
@@ -52,8 +54,10 @@ const severityGradient = (severity: string): [string, string] => {
 const severityProgress = (severity: string): number => {
   switch (severity.toLowerCase()) {
     case 'severe':
+    case 'high':
       return 85;
     case 'moderate':
+    case 'medium':
       return 55;
     default:
       return 30;
@@ -73,9 +77,30 @@ const STAT_COLORS: Record<string, string> = {
   dark_circles: '#FB7185',
   fine_lines: '#A78BFA',
   radiance: '#4ADE80',
+  blackheads: '#A78BFA',
 };
 
 const FALLBACK_IMAGE = require('@/assets/images/hair_scalp_analysis_sample_image.jpg');
+
+// ── Image resolution helper (mirrors analysis-complete.tsx) ──────────────────
+//
+// Priority:
+//   1. Per-condition S3 overlay (c.image_url)  — shows exactly where on the
+//      face the condition was detected with colour highlighting.
+//   2. visible_area overlay image              — primary condition highlight.
+//   3. First image in scan's images[]          — raw user capture.
+//   4. Static fallback asset.
+//
+const resolveConditionImage = (
+  conditionImageUrl: string | undefined,
+  visibleAreaImageUrl: string | undefined,
+  frontCaptureUri: string | undefined
+): ImageSourcePropType => {
+  if (conditionImageUrl) return { uri: conditionImageUrl };
+  if (visibleAreaImageUrl) return { uri: visibleAreaImageUrl };
+  if (frontCaptureUri) return { uri: frontCaptureUri };
+  return FALLBACK_IMAGE;
+};
 
 // ── Component ─────────────────────────────────────────────────────────────────
 const FaceScanDetailScreen = () => {
@@ -90,10 +115,23 @@ const FaceScanDetailScreen = () => {
     initialReady: false,
   });
 
-  // ── Image: use first image from the scan's images array ───────────────────
-  const faceImageSource: ImageSourcePropType = data?.images?.[0]
-    ? { uri: data.images[0] }
-    : FALLBACK_IMAGE;
+  // ── Image sources ─────────────────────────────────────────────────────────
+  // Front capture: first image in the scan's images array
+  const frontCaptureUri: string | undefined = data?.images?.[0];
+
+  // visible_area overlay (primary condition highlight from the API)
+  const visibleAreaImageUrl: string | undefined = data?.analysis.visible_area.image_url;
+
+  // Primary image: prefer visible_area overlay, then raw capture, then fallback
+  const primaryImageSource: ImageSourcePropType = visibleAreaImageUrl
+    ? { uri: visibleAreaImageUrl }
+    : frontCaptureUri
+      ? { uri: frontCaptureUri }
+      : FALLBACK_IMAGE;
+
+  // SkinAnalysisCards: show the visible_area overlay (highlighted face) if
+  // available, otherwise fall back to the raw front capture
+  const skinCardImageUri: string | undefined = visibleAreaImageUrl ?? frontCaptureUri;
 
   // ── Score card stats ──────────────────────────────────────────────────────
   const skinStats = data
@@ -105,6 +143,8 @@ const FaceScanDetailScreen = () => {
     : [];
 
   // ── Detected conditions ───────────────────────────────────────────────────
+  // Each condition gets its own per-condition overlay image (c.image_url) so
+  // the card shows the highlighted area for that specific condition.
   const detectedConditions: DetectedCondition[] = (data?.analysis.detected_condition ?? []).map(
     (c) => ({
       id: c.name,
@@ -113,7 +153,8 @@ const FaceScanDetailScreen = () => {
       description: c.note,
       progressValue: severityProgress(c.severity),
       progressColor: severityGradient(c.severity),
-      ImageUri: faceImageSource,
+      ImageUri: resolveConditionImage(c.image_url, visibleAreaImageUrl, frontCaptureUri),
+      phase: c.phase,
     })
   );
 
@@ -148,14 +189,15 @@ const FaceScanDetailScreen = () => {
           id: 'today',
           title: 'Today',
           subtitle: '(Current Condition)',
-          imageUri: faceImageSource as any,
+          // Today card: prefer front capture (real photo), fall back to overlay
+          imageUri: (frontCaptureUri ? { uri: frontCaptureUri } : primaryImageSource) as any,
           isFuture: false,
         },
         {
           id: 'day7',
           title: '+7 Days',
           subtitle: '(Prediction 1)',
-          imageUri: faceImageSource as any,
+          imageUri: primaryImageSource as any,
           isFuture: true,
           improvementPercentage: 18,
           metrics: Object.entries(data.analysis.prognosis_timeline.seven_days).map(
@@ -170,7 +212,7 @@ const FaceScanDetailScreen = () => {
           id: 'day14',
           title: '+14 Days',
           subtitle: '(Prediction 2)',
-          imageUri: faceImageSource as any,
+          imageUri: primaryImageSource as any,
           isFuture: true,
           improvementPercentage: 25,
           metrics: Object.entries(data.analysis.prognosis_timeline.fourteen_days).map(
@@ -236,8 +278,16 @@ const FaceScanDetailScreen = () => {
     );
   }
 
+  // ── Derived values ────────────────────────────────────────────────────────
   const hydrationTargetMl = data.analysis.hydration_target ?? 2400;
   const hydrationTargetLabel = `${(hydrationTargetMl / 1000).toFixed(1)}L of Water`;
+
+  const visibleAreaCondition = data.analysis.visible_area;
+  const rednessLabel =
+    visibleAreaCondition.condition.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) +
+    (visibleAreaCondition.areas.length > 0
+      ? ` (${visibleAreaCondition.areas.slice(0, 2).join(', ').replace(/_/g, ' ')})`
+      : '');
 
   // ── Main render ───────────────────────────────────────────────────────────
   return (
@@ -267,22 +317,21 @@ const FaceScanDetailScreen = () => {
 
           <View className="mt-6" />
 
+          {/* Skin Analysis Summary Cards
+              imageUri: visible_area overlay (shows highlighted skin), not raw capture */}
           <SkinAnalysisCards
-            imageUri={data.images?.[0]}
+            imageUri={skinCardImageUri}
             hydrationLevel={data.analysis.hydration}
-            rednessScore={data.analysis.checked_area['redness'] ?? data.analysis.visible_area.score}
-            rednessProgress={data.analysis.visible_area.score}
-            rednessLabel={
-              data.analysis.visible_area.condition
-                .replace(/_/g, ' ')
-                .replace(/\b\w/g, (c) => c.toUpperCase()) +
-              (data.analysis.visible_area.areas.length > 0
-                ? ` (${data.analysis.visible_area.areas.slice(0, 2).join(', ')})`
-                : '')
+            rednessScore={
+              data.analysis.checked_area[visibleAreaCondition.condition] ??
+              visibleAreaCondition.score
             }
+            rednessProgress={visibleAreaCondition.score}
+            rednessLabel={rednessLabel}
           />
 
-          {/* Detected Conditions */}
+          {/* Detected Conditions
+              Each card gets its own per-condition overlay image */}
           {detectedConditions.length > 0 && (
             <DetectedConditionsList
               conditions={detectedConditions}

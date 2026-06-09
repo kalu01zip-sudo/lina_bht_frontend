@@ -240,32 +240,6 @@ const HairAnalysisCompleteScreen = () => {
     };
   });
 
-  // ── Articles ──────────────────────────────────────────────────────────────
-  // const recommendedArticles = SAMPLE_ARTICLES.filter(
-  //   (a: { title: string; category: string }) =>
-  //     a.title.toLowerCase().includes('hair') ||
-  //     a.category.toLowerCase().includes('hair') ||
-  //     a.title.toLowerCase().includes('scalp')
-  // )
-  //   .slice(0, 2)
-  //   .map(
-  //     (a: {
-  //       id: any;
-  //       title: any;
-  //       description: any;
-  //       readTime: any;
-  //       category: any;
-  //       imageUrl: any;
-  //     }) => ({
-  //       id: a.id,
-  //       title: a.title,
-  //       description: a.description,
-  //       readTime: a.readTime,
-  //       category: a.category,
-  //       imageUrl: { uri: a.imageUrl },
-  //     })
-  //   );
-
   // ── Guards ────────────────────────────────────────────────────────────────
   if (isRendering && !data) {
     return (
@@ -391,21 +365,6 @@ const HairAnalysisCompleteScreen = () => {
             description="Proper hydration supports scalp moisture balance and reduces flakiness."
             title="Hydration Target"
           />
-
-          {/* Articles */}
-          {/* {recommendedArticles.length > 0 && (
-            <RecommendedArticles
-              articles={recommendedArticles}
-              title="Recommended for You"
-              showIcon={true}
-              onArticlePress={(article) =>
-                router.push({
-                  pathname: '/(flow)/learn-article/[id]',
-                  params: { id: article.id },
-                })
-              }
-            />
-          )} */}
 
           <AnalysisActionButtons style={{ marginTop: 32 }} />
 
