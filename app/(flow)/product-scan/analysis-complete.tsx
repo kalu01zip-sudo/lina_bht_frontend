@@ -26,6 +26,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useScreenReady } from '@/hooks/useScreenReady';
 import LoadingScreen from '@/components/loading/LoadingScreen';
 import ErrorScreen from '@/components/errors/ErrorScreen';
+import { AnalysisActionButtons } from '@/components/routines/AnalysisActionButtons';
 
 // ── Types mirroring the API response shape ────────────────────────────────────
 
@@ -473,6 +474,8 @@ const AiAnalysisCompleteScreen = () => {
           ) : null}
 
           {/* ── Actions ─────────────────────────────────────────────────────── */}
+          <AnalysisActionButtons style={{ marginTop: 32 }} />
+
           <PrimaryVariantButton
             title="Generate Routine"
             onPress={() =>

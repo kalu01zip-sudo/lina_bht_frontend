@@ -87,6 +87,7 @@ export const baseApi = createApi({
     'notificationApi',
     'Subscription',
     'articleApi',
+    'routineCheckApi',
   ],
   endpoints: () => ({}), // endpoints live in feature files via injectEndpoints
 });

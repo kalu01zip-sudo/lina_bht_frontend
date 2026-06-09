@@ -29,6 +29,7 @@ import {
   normaliseRecipe,
 } from '@/store/api/scanApi';
 import { AngleCapture } from '@/components/scans/MultiAngleCameraScan';
+import { AnalysisActionButtons } from '@/components/routines/AnalysisActionButtons';
 
 // ── Severity helpers ──────────────────────────────────────────────────────────
 const normaliseSeverity = (raw: string): 'Low' | 'Medium' | 'High' => {
@@ -389,6 +390,8 @@ const FaceAnalysisCompleteScreen = () => {
             description="Drinking enough water helps flush inflammatory markers and keeps your skin plump and clear."
             title="Hydration Target"
           />
+
+          <AnalysisActionButtons style={{ marginTop: 32 }} />
 
           {/* CTA */}
           {!isHistory && (

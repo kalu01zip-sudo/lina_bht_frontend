@@ -327,6 +327,7 @@ import { useDeleteRoutineStepMutation, usePatchRoutineStepMutation } from '@/sto
 import { mapStepToUI, UIRoutineStep } from '@/utils/routineMapper';
 import { useRoutines } from '@/hooks/useRoutines';
 import { useFocusEffect } from 'expo-router';
+import { AnalysisActionButtons } from '@/components/routines/AnalysisActionButtons';
 
 type RoutineType = 'morning' | 'night' | 'weekly';
 
@@ -709,6 +710,8 @@ const Routines = () => {
                   )}
               </BorderlessShadowCard>
             )}
+
+            <AnalysisActionButtons style={{ marginTop: 32 }} />
           </View>
         </View>
       </ScrollView>

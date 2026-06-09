@@ -30,6 +30,7 @@ import {
   normaliseFood,
   normaliseRecipe,
 } from '@/store/api/scanApi';
+import { AnalysisActionButtons } from '@/components/routines/AnalysisActionButtons';
 
 // ── Severity normaliser ───────────────────────────────────────────────────────
 const normaliseSeverity = (raw: string): 'Low' | 'Medium' | 'High' => {
@@ -405,6 +406,8 @@ const HairAnalysisCompleteScreen = () => {
               }
             />
           )} */}
+
+          <AnalysisActionButtons style={{ marginTop: 32 }} />
 
           {/* CTA */}
           <PrimaryButton
